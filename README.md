@@ -4,7 +4,6 @@
 **Havn** is a server-side rendered web application designed to streamline the relationship between property owners, managers, and tenants. The platform allows property owners to list and manage residential units, while providing tenants with a secure portal to view their lease details and manage maintenance requests. This project demonstrates backend principles including MVC architecture, session-based authentication, and relational database management.
 
 ## 2. Database Schema
-![Entity Relation Diagram]()  
 *Note: The ERD above was exported from pgAdmin and illustrates the relationships between Users, Properties, Units, Leases, and Maintenance Requests[cite: 90].*
 
 
