@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<main class="container">
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to <%= title %></h1>
+            <p>Seamless property management designed for modern landlords and tenants.</p>
+            <div class="hero-buttons">
+                <a href="/properties" class="btn btn-primary">Manage Properties</a>
+                <a href="/register" class="btn btn-secondary">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <section class="features">
+        <div class="feature-card">
+            <div class="icon">🏠</div>
+            <h3>Smart Listings</h3>
+            <p>Organize your portfolio with intuitive tracking and high-res galleries.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="icon">💳</div>
+            <h3>Automated Payments</h3>
+            <p>Collect rent and manage deposits with secure, automated processing.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon">🔧</div>
+            <h3>Maintenance Portal</h3>
+            <p>Receive and track repair requests in real-time from your tenants.</p>
+        </div>
+    </section>
+</main>
+
+<%- include('partials/footer') %>
