@@ -1,4 +1,4 @@
-/* css for the header */
+/* --- HEADER & NAVIGATION --- */
 .main-header {
     background: #ffffff;
     border-bottom: 1px solid #eaeaea;
@@ -42,67 +42,10 @@
     color: #3498db;
 }
 
-/* Small UI button for the Register/Join link */
+/* UI button for the Register/Join link in the nav */
 .btn-primary-sm {
     background: #2c3e50;
     color: white !important;
     padding: 8px 16px;
     border-radius: 4px;
 }
-
-/* css for the main page */
-:root {
-    --primary: #2c3e50; /* Deep Navy */
-    --accent: #3498db;  /* Soft Blue */
-    --bg: #f8f9fa;
-    --text: #333;
-}
-
-body {
-    font-family: 'Inter', system-ui, sans-serif;
-    color: var(--text);
-    line-height: 1.6;
-}
-
-.hero {
-    padding: 80px 20px;
-    text-align: center;
-    background: white;
-}
-
-.hero h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    color: var(--primary);
-}
-
-.features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    padding: 60px 20px;
-}
-
-.feature-card {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-}
-
-.btn {
-    padding: 12px 24px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-block;
-    margin: 5px;
-}
-
-.btn-primary { background: var(--primary); color: white; }
-.btn-secondary { border: 2px solid var(--primary); color: var(--primary); }
