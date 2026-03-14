@@ -8,6 +8,7 @@ router.get('/', homePage);
 
 router.get('/about', aboutPage);
 
+
 // router.get('/properties', )
 
 export default router;
