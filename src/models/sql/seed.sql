@@ -150,7 +150,7 @@ CREATE TABLE documents (
 
 -- 4. Insert Seed Data
 
--- Users (Uniform Password: P@$$w0rd!)
+
 INSERT INTO users (id, email, password_hash, first_name, last_name, phone, role) VALUES
     (1, 'admin@propco.com', 'P@$$w0rd!', 'Alice', 'Admin', '555-0100', 'admin'),
     (2, 'manager1@propco.com', 'P@$$w0rd!', 'Bob', 'Manager', '555-0101', 'manager'),
