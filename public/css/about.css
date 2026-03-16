@@ -1,9 +1,7 @@
-/* --- ABOUT PAGE --- */
+/* --- ABOUT PAGE SPECIFIC STYLES --- */
+
 .about-page {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
+    background-color: var(--bg);
 }
 
 .container {
@@ -21,16 +19,16 @@
 
 /* Hero Section */
 .hero-section {
-    background-color: #fff;
+    background-color: var(--white);
     padding: 80px 0;
     text-align: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
 }
 
 .hero-section h1 {
     font-size: 3rem;
     margin-bottom: 10px;
-    color: #1a1a1a;
+    color: var(--primary);
 }
 
 .hero-subtitle {
@@ -54,6 +52,7 @@
 .story-content h2 {
     font-size: 2rem;
     margin-bottom: 20px;
+    color: var(--primary);
 }
 
 .story-image {
@@ -68,14 +67,14 @@
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    color: #1976d2;
+    color: var(--accent);
     font-weight: bold;
 }
 
 /* Grid for Values */
 .values-section {
     background-color: #f1f1f1;
-    padding: 60px 0;
+    padding: 80px 0;
 }
 
 .grid-4 {
@@ -85,62 +84,15 @@
 }
 
 .value-card {
-    background: #fff;
+    background: var(--white);
     padding: 30px;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* Advantage Table */
-.advantage-section {
-    padding: 60px 0;
-    background: #fff;
-}
-
-.advantage-section h2 {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.table-container {
-    overflow-x: auto;
-}
-
-.advantage-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.advantage-table th {
-    background-color: #333;
-    color: #fff;
-    padding: 15px;
-    text-align: left;
-}
-
-.advantage-table td {
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* CTA Section */
-.cta-section {
-    background-color: #007bff;
-    color: #fff;
-    padding: 80px 0;
-    text-align: center;
-}
-
-.cta-button {
-    display: inline-block;
-    background-color: #fff;
-    color: #007bff;
-    padding: 15px 40px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 50px;
-    margin-top: 20px;
-    transition: background 0.3s;
+.value-card h3 {
+    color: var(--primary);
+    margin-top: 0;
 }
 
 /* Mobile Responsiveness */

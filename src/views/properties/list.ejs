@@ -7,10 +7,10 @@
         <% if (properties.length > 0) { %>
             <% properties.forEach(property => { %>
                 <div class="property-card">
-                    <img src="<%= property.imageUrl %>" alt="<%= property.title %>">
-                    <h3><%= property.title %></h3>
-                    <p><%= property.location %></p>
-                    <p><strong>$<%= property.price.toLocaleString() %></strong></p>
+                    <img src="/images/<%= property.id %>.png" alt="<%= property.name %>">
+                    <h3><%= property.name %></h3>
+                    <p><%= property.fullAddress %></p>
+                    <p><strong><%= property.type %></strong></p>
                     <a href="/properties/<%= property._id %>" class="btn">View Details</a>
                 </div>
             <% }); %>

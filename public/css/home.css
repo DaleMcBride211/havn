@@ -1,18 +1,4 @@
-/* --- HOME PAGE & GLOBAL STYLES --- */
-:root {
-    --primary: #2c3e50; /* Deep Navy */
-    --accent: #3498db;  /* Soft Blue */
-    --bg: #f8f9fa;
-    --text: #333;
-}
-
-body {
-    font-family: 'Inter', system-ui, sans-serif;
-    color: var(--text);
-    line-height: 1.6;
-    margin: 0; /* Added to prevent default browser gaps */
-}
-
+/* --- HERO SECTION --- */
 .hero {
     padding: 80px 20px;
     text-align: center;
@@ -25,6 +11,14 @@ body {
     color: var(--primary);
 }
 
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    color: #666;
+}
+
+/* --- FEATURES GRID --- */
 .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -40,13 +34,19 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     transition: transform 0.2s;
+    text-align: center;
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
 }
 
-/* General Button Components */
+.feature-card .icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+/* --- HOME SPECIFIC BUTTONS --- */
 .btn {
     padding: 12px 24px;
     border-radius: 6px;
@@ -56,5 +56,18 @@ body {
     margin: 5px;
 }
 
-.btn-primary { background: var(--primary); color: white; }
-.btn-secondary { border: 2px solid var(--primary); color: var(--primary); }
+.btn-primary { 
+    background: var(--primary); 
+    color: white; 
+}
+
+.btn-secondary { 
+    border: 2px solid var(--primary); 
+    color: var(--primary); 
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 0;
+}

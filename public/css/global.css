@@ -1,0 +1,227 @@
+/* --- 1. DESIGN TOKENS (VARIABLES) --- */
+:root {
+    --primary: #2c3e50; /* Deep Navy */
+    --accent: #3498db;  /* Soft Blue */
+    --bg: #f8f9fa;
+    --text: #333;
+    --white: #ffffff;
+    --border: #eaeaea;
+    --footer-text: #bdc3c7;
+}
+
+/* --- 2. BASE RESET --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+    background-color: var(--bg);
+}
+
+/* --- 3. HEADER & NAVIGATION --- */
+.main-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo a {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    flex-wrap: nowrap; /* Prevents nav from breaking into two lines */
+}
+
+.nav-links li {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; /* Prevents link text from wrapping */
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+/* --- 4. GLOBAL UI COMPONENTS (Buttons) --- */
+.btn-primary-sm {
+    background: var(--primary);
+    color: var(--white) !important;
+    padding: 8px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap; /* Prevents "Join Havn" from stacking */
+    flex-shrink: 0;      /* Prevents button from being squashed */
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-primary-sm:hover {
+    background: var(--accent);
+}
+
+.btn-primary-sm:active {
+    transform: translateY(1px);
+}
+
+/* --- 5. FOOTER --- */
+.main-footer {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 60px 0 0;
+    margin-top: 60px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.footer-brand {
+    flex: 2;
+    min-width: 250px;
+}
+
+.footer-logo {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.footer-brand p {
+    color: var(--footer-text);
+    max-width: 300px;
+}
+
+.footer-links, .footer-social {
+    flex: 1;
+    min-width: 150px;
+}
+
+.footer-links h4, .footer-social h4 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: var(--footer-text);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--white);
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    color: var(--white);
+    text-decoration: none;
+    background: rgba(255,255,255,0.1);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.social-icons a:hover {
+    background: var(--accent);
+}
+
+.footer-bottom {
+    margin-top: 60px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 25px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+/* --- 6. GLOBAL RESPONSIVENESS --- */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-brand p {
+        margin: 0 auto;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
