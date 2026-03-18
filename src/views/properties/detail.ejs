@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<main class="container">
+    <div class="property-card">
+        <h1><%= specificProperty.name %> <small>(ID: <%= specificProperty.id %>)</small></h1>
+        <img src="/images/<%= specificProperty.id %>.png" alt="<%= specificProperty.name %>">
+        
+        <section class="info">
+            <h3>Location</h3>
+            <p><strong>Address:</strong> <%= specificProperty.fullAddress %></p>
+            <p><strong>Type:</strong> <%= specificProperty.type.replace('_', ' ').toUpperCase() %></p>
+        </section>
+
+        <hr>
+
+        <section class="amenities">
+            <h3>Amenities</h3>
+            <ul>
+                <% if (specificProperty && Object.keys(specificProperty).length > 0) { %>
+                    <% for (let [key, value] of Object.entries(specificProperty.amenities)) { %>
+                        <% if (value === true) { %>
+                            <li>✅ <%= key.replace('_', ' ') %></li>
+                        <% } else { %>
+                            <li>❌ <%= key.replace('_', ' ') %></li>
+                        <% } %>
+                    <% } %>
+                <% } else { %>
+                    <li>No amenities listed.</li>
+                <% } %>
+            </ul>
+        </section>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

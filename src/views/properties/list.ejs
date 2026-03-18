@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <main class="container">
-    <h1>Available Properties</h1>
+    <h1>Available Rentals</h1>
     
     <div class="property-grid">
         <% if (properties.length > 0) { %>
@@ -11,7 +11,7 @@
                     <h3><%= property.name %></h3>
                     <p><%= property.fullAddress %></p>
                     <p><strong><%= property.type %></strong></p>
-                    <a href="/properties/<%= property._id %>" class="btn">View Details</a>
+                    <a href="/properties/<%= property.id %>" class="btn">View Details</a>
                 </div>
             <% }); %>
         <% } else { %>

@@ -40,19 +40,30 @@ const loginValidation = [
 ];
 
 const registrationValidation = [
-    body('name')
+    body('firstName') // Matches the 'firstName' in your console log
         .trim()
-        .isLength({ min: 2, max: 100 })
-        .withMessage('Name must be between 2 and 100 characters')
+        .isLength({ min: 2, max: 50 })
+        .withMessage('First name must be between 2 and 50 characters')
         .matches(/^[a-zA-Z\s'-]+$/)
-        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
+        .withMessage('First name contains invalid characters'),
+    
+    body('lastName') // Matches the 'lastName' in your console log
+        .trim()
+        .isLength({ min: 2, max: 50 })
+        .withMessage('Last name must be between 2 and 50 characters')
+        .matches(/^[a-zA-Z\s'-]+$/)
+        .withMessage('Last name contains invalid characters'),
+
+    body('phone')
+        .optional({ checkFalsy: true })
+        .isMobilePhone()
+        .withMessage('Please provide a valid phone number'),
+
     body('email')
         .trim()
         .isEmail()
         .normalizeEmail()
-        .withMessage('Must be a valid email address')
-        .isLength({min: 2, max: 100})
-        .withMessage('Email is way too long'),
+        .withMessage('Must be a valid email address'),
     body('emailConfirm')
         .trim()
         .custom((value, { req }) => value === req.body.email)

@@ -1,46 +1,43 @@
 import db from '../db.js';
 
 /**
- * Checks if an email address is already registered in the database.
- * 
- * @param {string} email - The email address to check
- * @returns {Promise<boolean>} True if email exists, false otherwise
+ * Checks if an email address is already registered.
+ * Returns the user object if found, otherwise false.
  */
 const emailExists = async (email) => {
     const query = `
-        SELECT EXISTS(SELECT 1 FROM users WHERE email = $1) as exists
+        SELECT id, email FROM users WHERE LOWER(email) = LOWER($1) AND deleted_at IS NULL
     `;
     const result = await db.query(query, [email]);
-    return result.rows[0].exists;
+    return result.rows.length > 0 ? result.rows[0] : false;
 };
 
 /**
- * Saves a new user to the database with a hashed password.
- * 
- * @param {string} name - The user's full name
- * @param {string} email - The user's email address
- * @param {string} hashedPassword - The bcrypt-hashed password
- * @returns {Promise<Object>} The newly created user record (without password)
+ * Saves a new user to the database.
  */
-const saveUser = async (name, email, hashedPassword) => {
+const saveUser = async (userData) => {
+    // FIX: Changed 'hashedPassword' to 'passwordHash' to match controller
+    const { firstName, lastName, email, passwordHash, phone, role = 'tenant' } = userData;
+    
     const query = `
-        INSERT INTO users (name, email, password)
-        VALUES ($1, $2, $3)
-        RETURNING id, name, email, created_at
+        INSERT INTO users (first_name, last_name, email, password_hash, phone, role)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id, first_name, last_name, email, role, created_at
     `;
-    const result = await db.query(query, [name, email, hashedPassword]);
+    
+    const values = [firstName, lastName, email, passwordHash, phone, role];
+    const result = await db.query(query, values);
     return result.rows[0];
 };
 
 /**
- * Retrieves all registered users from the database.
- * 
- * @returns {Promise<Array>} Array of user records (without passwords)
+ * Retrieves all non-deleted users.
  */
 const getAllUsers = async () => {
     const query = `
-        SELECT id, name, email, created_at
+        SELECT id, first_name, last_name, email, role, phone, created_at
         FROM users
+        WHERE deleted_at IS NULL
         ORDER BY created_at DESC
     `;
     const result = await db.query(query);
@@ -48,43 +45,43 @@ const getAllUsers = async () => {
 };
 
 /**
- * Retrieve a single user by ID with role information
+ * Retrieve a single user by ID.
  */
 const getUserById = async (id) => {
     const query = `
-        SELECT 
-            users.id,
-            users.name,
-            users.email,
-            users.created_at,
-            roles.role_name AS "roleName"
+        SELECT id, first_name, last_name, email, phone, role, created_at
         FROM users
-        INNER JOIN roles ON users.role_id = roles.id
-        WHERE users.id = $1
+        WHERE id = $1 AND deleted_at IS NULL
     `;
     const result = await db.query(query, [id]);
     return result.rows[0] || null;
 };
 
 /**
- * Update a user's name and email
+ * Update a user's profile info.
+ * Updated to accept an object for consistency.
  */
-const updateUser = async (id, name, email) => {
+const updateUser = async (id, updateData) => {
+    const { firstName, lastName, email, phone } = updateData;
     const query = `
         UPDATE users 
-        SET name = $1, email = $2, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $3
-        RETURNING id, name, email, updated_at
+        SET first_name = $1, last_name = $2, email = $3, phone = $4, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $5 AND deleted_at IS NULL
+        RETURNING id, first_name, last_name, email, updated_at
     `;
-    const result = await db.query(query, [name, email, id]);
+    const result = await db.query(query, [firstName, lastName, email, phone, id]);
     return result.rows[0] || null;
 };
 
 /**
- * Delete a user account
+ * Soft delete a user account.
  */
 const deleteUser = async (id) => {
-    const query = 'DELETE FROM users WHERE id = $1';
+    const query = `
+        UPDATE users 
+        SET deleted_at = CURRENT_TIMESTAMP 
+        WHERE id = $1 AND deleted_at IS NULL
+    `;
     const result = await db.query(query, [id]);
     return result.rowCount > 0;
 };

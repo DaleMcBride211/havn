@@ -1,0 +1,119 @@
+/* --- 7. PROPERTY DETAIL PAGE --- */
+
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.property-card {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Title & ID Styling */
+.property-card h1 {
+    padding: 30px 30px 10px;
+    margin: 0;
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.property-card h1 small {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    font-weight: 400;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Main Property Image */
+.property-card img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover; /* Ensures image doesn't stretch */
+    display: block;
+    background-color: #eee;
+}
+
+/* Sections Padding */
+.property-card section {
+    padding: 30px;
+}
+
+.property-card h3 {
+    margin-top: 0;
+    color: var(--primary);
+    border-left: 4px solid var(--accent);
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+/* Info Section */
+.info p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+.info strong {
+    color: var(--primary);
+}
+
+/* Divider */
+.property-card hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 0 30px;
+}
+
+/* Amenities Grid */
+.amenities ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.amenities li {
+    background: var(--bg);
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.amenities li:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* Responsiveness for Detail Page */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto;
+    }
+
+    .property-card img {
+        height: 250px;
+    }
+
+    .property-card h1 {
+        font-size: 1.5rem;
+        padding: 20px;
+    }
+
+    .property-card section {
+        padding: 20px;
+    }
+
+    .amenities ul {
+        grid-template-columns: 1fr 1fr; /* Two columns on mobile */
+    }
+}

@@ -1,4 +1,4 @@
-import { getProperties } from '../../models/properties/list.js'
+import { getProperties, getPropertyById } from '../../models/properties/list.js'
 
 const propertyListPage = async (req, res) => {
 
@@ -12,5 +12,24 @@ const propertyListPage = async (req, res) => {
     })
 };
 
+const propertyDetailPage = async (req, res, next) => {
+    const propertyId = req.params.id;
 
-export { propertyListPage };
+    const specificProperty = await getPropertyById(propertyId);
+    console.log('Specific Property', specificProperty);
+
+    if (!propertyId) {
+        const err = new Error(`Property id ${propertyId} not found`);
+        err.status = 404;
+        return next(err)
+    }
+
+    res.render('properties/detail', {
+        title: specificProperty.name,
+        stylesheet: 'propertyDetail.css',
+        specificProperty
+    });
+};
+
+
+export { propertyListPage, propertyDetailPage };

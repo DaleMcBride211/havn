@@ -77,5 +77,6 @@ export {
     getPropertyById, 
     getPropertyByName, 
     getProperties, 
-    searchProperties 
+    searchProperties,
+    getProperty 
 };
