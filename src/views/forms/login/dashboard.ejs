@@ -11,7 +11,7 @@
             
             <div class="user-detail">
                 <span class="label">Name:</span>
-                <span class="value"><%= user.name %></span>
+                <span class="value"><%= user.first_name %> <%= user.last_name %></span>
             </div>
 
             <div class="user-detail">
@@ -21,22 +21,13 @@
 
             <div class="user-detail">
                 <span class="label">Role:</span>
-                <span class="value"><%= user.roleName %></span>
+                <span class="value"><%= user.role %></span>
             </div>
 
             <div class="user-detail">
                 <span class="label">Member Since:</span>
                 <span class="value"><%= new Date(user.created_at).toLocaleDateString() %></span>
             </div>
-        </div>
-
-        <div class="session-debug">
-            <h3>Session Information (For Learning Purposes)</h3>
-            <p><em>This section shows your current session data for educational purposes.</em></p>
-            <pre><%= JSON.stringify(sessionData, null, 2) %></pre>
-            <p>
-                <strong>If you see a password property in the above object you have a security vulnerability, fix it!</strong>
-            </p>
         </div>
 
         <div class="dashboard-actions">

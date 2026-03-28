@@ -3,31 +3,73 @@
 <main class="container">
     <div class="property-card">
         <h1><%= specificProperty.name %> <small>(ID: <%= specificProperty.id %>)</small></h1>
-        <img src="/images/<%= specificProperty.id %>.png" alt="<%= specificProperty.name %>">
+        <img src="/images/<%= specificProperty.id %>.png" alt="<%= specificProperty.name %>" class="property-hero">
         
-        <section class="info">
-            <h3>Location</h3>
-            <p><strong>Address:</strong> <%= specificProperty.fullAddress %></p>
-            <p><strong>Type:</strong> <%= specificProperty.type.replace('_', ' ').toUpperCase() %></p>
-        </section>
+        <div class="property-details-grid">
+            <section class="info">
+                <h3>Location</h3>
+                <p><strong>Address:</strong> <%= specificProperty.fullAddress %></p>
+                <p><strong>Type:</strong> <%= specificProperty.type.replace('_', ' ').toUpperCase() %></p>
+            </section>
+
+            <section class="amenities">
+                <h3>Amenities</h3>
+                <ul>
+                    <% if (specificProperty.amenities && Object.keys(specificProperty.amenities).length > 0) { %>
+                        <% for (let [key, value] of Object.entries(specificProperty.amenities)) { %>
+                            <li>
+                                <%= value === true ? '✅' : '❌' %> 
+                                <%= key.replace('_', ' ') %>
+                            </li>
+                        <% } %>
+                    <% } else { %>
+                        <li>No amenities listed.</li>
+                    <% } %>
+                </ul>
+            </section>
+        </div>
 
         <hr>
 
-        <section class="amenities">
-            <h3>Amenities</h3>
-            <ul>
-                <% if (specificProperty && Object.keys(specificProperty).length > 0) { %>
-                    <% for (let [key, value] of Object.entries(specificProperty.amenities)) { %>
-                        <% if (value === true) { %>
-                            <li>✅ <%= key.replace('_', ' ') %></li>
-                        <% } else { %>
-                            <li>❌ <%= key.replace('_', ' ') %></li>
-                        <% } %>
-                    <% } %>
-                <% } else { %>
-                    <li>No amenities listed.</li>
-                <% } %>
-            </ul>
+        <section class="units-list">
+            <h3>Units Inventory</h3>
+            <% if (specificProperty.units && specificProperty.units.length > 0) { %>
+                <table class="units-table">
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Beds/Baths</th>
+                            <th>Sq Ft</th>
+                            <th>Market Rent</th>
+                            <th>Status</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% specificProperty.units.forEach(unit => { %>
+                            <tr>
+                                <td><strong><%= unit.unit_number %></strong></td>
+                                <td><%= unit.bedrooms %>BR / <%= unit.bathrooms %>BA</td>
+                                <td><%= unit.sq_ft.toLocaleString() %> sq ft</td>
+                                <td>$<%= parseFloat(unit.market_rent).toLocaleString() %></td>
+                                <td>
+                                    <span class="status-badge status-<%= unit.status %>">
+                                        <%= unit.status.toUpperCase() %>
+                                    </span>
+
+                                    <% if (unit.status.toLowerCase() === 'vacant') { %>
+                                        <a href="/rent/<%= specificProperty.id %>/<%= unit.unit_number %>" class="btn-rent">
+                                            Rent Now
+                                        </a>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No units found for this property.</p>
+            <% } %>
         </section>
     </div>
 </main>

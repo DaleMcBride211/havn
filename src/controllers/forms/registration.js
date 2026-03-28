@@ -22,7 +22,8 @@ const showRegistrationForm = (req, res) => {
     // TODO: Render the registration form view (forms/registration/form)
     // TODO: Pass title: 'User Registration' in the data object
     res.render('forms/registration/form', {
-        title: 'User Registration'
+        title: 'User Registration',
+        stylesheet: 'register.css'
     });
 };
 
@@ -78,13 +79,15 @@ const showAllUsers = async (req, res) => {
     let users = [];
     try {
         users = await getAllUsers();
+
     } catch (error) {
         console.error('Error retrieving users:', error);
     }
     res.render('forms/registration/list', {
         title: 'Registered Users',
         users,
-        user: req.session && req.session.user ? req.session.user : null
+        user: req.session && req.session.user ? req.session.user : null,
+        stylesheet: 'listUsers.css'
     });
 };
 
@@ -108,7 +111,8 @@ const showEditAccountForm = async (req, res) => {
     }
     res.render('forms/registration/edit', {
         title: 'Edit Account',
-        user: targetUser
+        user: targetUser,
+        stylesheet: 'editaccount.css'
     });
 };
 /**

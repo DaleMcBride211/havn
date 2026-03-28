@@ -1,6 +1,5 @@
 -- Comprehensive Database Seed File for Property Management System
 -- Locations: WY, MT, ID | 20 Properties | 1 Flagship (20 Units)
--- Test Password for all users: P@$$w0rd!
 
 BEGIN;
 
@@ -150,16 +149,18 @@ CREATE TABLE documents (
 
 -- 4. Insert Seed Data
 
-
+-- USERS (With the requested password hash for all)
 INSERT INTO users (id, email, password_hash, first_name, last_name, phone, role) VALUES
-    (1, 'admin@propco.com', 'P@$$w0rd!', 'Alice', 'Admin', '555-0100', 'admin'),
-    (2, 'manager1@propco.com', 'P@$$w0rd!', 'Bob', 'Manager', '555-0101', 'manager'),
-    (3, 'manager2@propco.com', 'P@$$w0rd!', 'Carol', 'Supervisor', '555-0102', 'manager'),
-    (4, 'tenant1@email.com', 'P@$$w0rd!', 'David', 'Tenant', '555-0201', 'tenant'),
-    (5, 'tenant2@email.com', 'P@$$w0rd!', 'Eve', 'Renter', '555-0202', 'tenant'),
-    (6, 'tenant3@email.com', 'P@$$w0rd!', 'Frank', 'Resident', '555-0203', 'tenant');
+    (1, 'admin@propco.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'Alice', 'Admin', '555-0100', 'admin'),
+    (2, 'manager1@propco.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'Bob', 'Manager', '555-0101', 'manager'),
+    (3, 'manager2@propco.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'Carol', 'Supervisor', '555-0102', 'manager'),
+    (4, 'tenant1@email.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'David', 'Tenant', '555-0201', 'tenant'),
+    (5, 'tenant2@email.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'Eve', 'Renter', '555-0202', 'tenant'),
+    (6, 'tenant3@email.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'Frank', 'Resident', '555-0203', 'tenant'),
+    (7, 'dlmcburrito@gmail.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'Dale', 'McBride', '3073145132', 'admin'),
+    (8, 'lukehill@gmail.com', '$2b$10$Z1MzwIVDUaZIogaM6/SvTeOAE8SwzfmjJXMMLtBuJXdh2KX52viFO', 'Luke', 'Hill', '3077652130', 'tenant');
 
--- 20 Properties in ID, MT, WY
+-- PROPERTIES (20 Properties in ID, MT, WY)
 INSERT INTO properties (id, name, address, city, state, zip, property_type, amenities) VALUES
 (1, 'Mountain View Flagship', '400 S 2nd W', 'Rexburg', 'ID', '83440', 'apartment_building', '{"gym": true, "parking": "garage", "fiber_internet": true}'),
 (2, 'Yellowstone Gateway House', '120 Canyon Ave', 'Cody', 'WY', '82414', 'house', '{"yard": true, "view": "mountains"}'),
@@ -182,32 +183,102 @@ INSERT INTO properties (id, name, address, city, state, zip, property_type, amen
 (19, 'Laramie Plains Apts', '1500 Grand Ave', 'Laramie', 'WY', '82070', 'apartment_building', '{"student_discount": true}'),
 (20, 'Flathead Lake Villa', '10 Lakeside Blvd', 'Kalispell', 'MT', '59901', 'house', '{"dock": true}');
 
--- Units for Property 1 (The 20-Unit Flagship in Rexburg)
+-- UNITS
+-- Property 1: 20-Unit Flagship
 INSERT INTO units (property_id, unit_number, bedrooms, bathrooms, sq_ft, market_rent, status)
-SELECT 1, 'Unit-' || i, 2, 1.5, 950, 1250.00, 'occupied'
-FROM generate_series(101, 120) AS i;
+SELECT 1, 'Unit-' || i, 2, 1.5, 950, 1250.00, 'vacant'
+FROM generate_series(1, 20) AS i;
 
--- Units for other properties
-INSERT INTO units (property_id, unit_number, bedrooms, bathrooms, sq_ft, market_rent, status) VALUES
-(2, 'Main', 4, 3.0, 2600, 2900.00, 'occupied'),
-(3, '101', 1, 1.0, 680, 1400.00, 'vacant'),
-(4, 'Unit A', 3, 2.5, 1400, 1750.00, 'occupied');
+-- All Houses: Single unit named 'Main'
+INSERT INTO units (property_id, unit_number, bedrooms, bathrooms, sq_ft, market_rent, status)
+SELECT id, 'Main', 3, 2.0, 1800, 2200.00, 'vacant'
+FROM properties 
+WHERE property_type = 'house' AND id != 1; 
 
--- Managers to Properties Mapping
+-- All Other Apartment Buildings: 4 Units each
+INSERT INTO units (property_id, unit_number, bedrooms, bathrooms, sq_ft, market_rent, status)
+SELECT p.id, 'Unit-' || s.i, 2, 1.0, 850, 1350.00, 'vacant'
+FROM properties p
+CROSS JOIN generate_series(1, 4) AS s(i)
+WHERE p.property_type = 'apartment_building' AND p.id != 1;
+
+-- MANAGERS TO PROPERTIES
 INSERT INTO managers_properties (manager_id, property_id) 
 SELECT 2, id FROM properties WHERE id <= 10;
 INSERT INTO managers_properties (manager_id, property_id) 
 SELECT 3, id FROM properties WHERE id > 10;
 
--- Leases for the Flagship
-INSERT INTO leases (unit_id, tenant_id, start_date, end_date, monthly_rent, security_deposit_amount, status)
-SELECT id, 4, '2024-01-01', '2024-12-31', 1250.00, 1000.00, 'active'
-FROM units WHERE property_id = 1 LIMIT 5;
+-- VENDORS
+INSERT INTO vendors (company_name, service_category, phone, email) VALUES
+('Rocky Mountain Plumbing', 'Plumbing', '555-0881', 'dispatch@rmplumbing.com'),
+('Teton Electric', 'Electrical', '555-0882', 'service@tetonelectric.com'),
+('Yellowstone HVAC Specialists', 'HVAC', '555-0883', 'repairs@yellowstonehvac.com'),
+('Pioneer Landscaping', 'Landscaping', '555-0884', 'hello@pioneergrounds.com');
+
+-- LEASES (Dynamic subqueries guarantee we hit valid unit_ids for these specific properties)
+-- Giving leases to Tenant 4, Tenant 5, Tenant 6, and new Tenant 8 (Luke)
+INSERT INTO leases (unit_id, tenant_id, start_date, end_date, monthly_rent, security_deposit_amount, status) VALUES
+-- Tenant 4 gets 2 units in Prop 1
+((SELECT id FROM units WHERE property_id = 1 LIMIT 1 OFFSET 0), 4, '2024-01-01', '2024-12-31', 1250.00, 1000.00, 'active'),
+((SELECT id FROM units WHERE property_id = 1 LIMIT 1 OFFSET 1), 4, '2024-01-01', '2024-12-31', 1250.00, 1000.00, 'active'),
+-- Tenant 5 (Eve) gets the Yellowstone Gateway House (Prop 2)
+((SELECT id FROM units WHERE property_id = 2 LIMIT 1), 5, '2024-03-01', '2025-02-28', 2200.00, 2200.00, 'active'),
+-- Tenant 6 (Frank) gets an apartment in Bozeman Trail Lofts (Prop 3)
+((SELECT id FROM units WHERE property_id = 3 LIMIT 1), 6, '2023-08-01', '2024-07-31', 1350.00, 1000.00, 'active'),
+-- Tenant 8 (Luke) gets the Teton Breeze Duplex (Prop 4)
+((SELECT id FROM units WHERE property_id = 4 LIMIT 1), 8, '2024-05-01', '2025-04-30', 2200.00, 2200.00, 'active');
+
+-- Set units with active leases to 'occupied'
+UPDATE units SET status = 'occupied' 
+WHERE id IN (SELECT unit_id FROM leases WHERE status = 'active');
+
+-- INSPECTIONS
+INSERT INTO inspections (unit_id, inspector_id, type, notes, rating)
+SELECT unit_id, 2, 'move_in', 'Standard move-in inspection completed. Minor wear and tear noted.', 4 
+FROM leases WHERE status = 'active';
+
+-- WORK ORDERS
+INSERT INTO work_orders (unit_id, requester_id, assigned_manager_id, vendor_id, title, description, priority, status, cost) VALUES
+-- Tenant 8 (Luke) requests electrical work
+((SELECT unit_id FROM leases WHERE tenant_id = 8 LIMIT 1), 8, 2, 2, 'Flickering Hallway Lights', 'The lights in the hallway are flickering consistently.', 'medium', 'in_progress', NULL),
+-- Tenant 5 (Eve) requests plumbing work
+((SELECT unit_id FROM leases WHERE tenant_id = 5 LIMIT 1), 5, 2, 1, 'Leaky Kitchen Faucet', 'Continuous drip from the kitchen sink.', 'low', 'completed', 175.50),
+-- Tenant 6 (Frank) requests emergency HVAC
+((SELECT unit_id FROM leases WHERE tenant_id = 6 LIMIT 1), 6, 2, 3, 'Heater Broken', 'Furnace is completely unresponsive and it is freezing.', 'emergency', 'new', NULL);
+
+-- TRANSACTIONS
+-- 1. Insert Security Deposits for all active leases
+INSERT INTO transactions (lease_id, amount, type, status)
+SELECT id, security_deposit_amount, 'deposit', 'succeeded' FROM leases;
+
+-- 2. Insert First Month's Rent for all active leases
+INSERT INTO transactions (lease_id, amount, type, status)
+SELECT id, monthly_rent, 'rent', 'succeeded' FROM leases;
+
+-- 3. Add a Late Fee for Tenant 6
+INSERT INTO transactions (lease_id, amount, type, status)
+SELECT id, 50.00, 'late_fee', 'pending' FROM leases WHERE tenant_id = 6 LIMIT 1;
+
+-- DOCUMENTS
+-- Generate dummy lease documents for active leases
+INSERT INTO documents (file_url, file_name, related_type, related_id)
+SELECT 'https://s3.aws.com/property_bucket/leases/signed_lease_' || id || '.pdf', 'Signed_Lease_Agreement_' || id || '.pdf', 'lease', id 
+FROM leases;
+
+-- Generate an invoice document for the completed work order
+INSERT INTO documents (file_url, file_name, related_type, related_id)
+SELECT 'https://s3.aws.com/property_bucket/invoices/vendor_invoice_' || id || '.pdf', 'Vendor_Invoice_' || id || '.pdf', 'work_order', id
+FROM work_orders WHERE status = 'completed';
 
 -- 5. Reset Sequences
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 SELECT setval('properties_id_seq', (SELECT MAX(id) FROM properties));
 SELECT setval('units_id_seq', (SELECT MAX(id) FROM units));
 SELECT setval('leases_id_seq', (SELECT COALESCE(MAX(id), 1) FROM leases));
+SELECT setval('vendors_id_seq', (SELECT COALESCE(MAX(id), 1) FROM vendors));
+SELECT setval('inspections_id_seq', (SELECT COALESCE(MAX(id), 1) FROM inspections));
+SELECT setval('work_orders_id_seq', (SELECT COALESCE(MAX(id), 1) FROM work_orders));
+SELECT setval('transactions_id_seq', (SELECT COALESCE(MAX(id), 1) FROM transactions));
+SELECT setval('documents_id_seq', (SELECT COALESCE(MAX(id), 1) FROM documents));
 
 COMMIT;

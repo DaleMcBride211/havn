@@ -22,16 +22,33 @@ const mapPropertyRow = (row) => ({
 const getProperty = async (identifier, identifierType = 'id') => {
     const whereClause = identifierType === 'name' ? 'name = $1' : 'id = $1';
     
-    const query = `
+    // 1. Fetch the Property
+    const propertyQuery = `
         SELECT id, name, address, city, state, zip, property_type, amenities
         FROM properties
         WHERE ${whereClause}
     `;
 
-    const result = await db.query(query, [identifier]);
+    const propResult = await db.query(propertyQuery, [identifier]);
 
-    if (result.rows.length === 0) return null;
-    return mapPropertyRow(result.rows[0]);
+    if (propResult.rows.length === 0) return null;
+
+    const property = mapPropertyRow(propResult.rows[0]);
+
+    // 2. Fetch all Units associated with this Property ID
+    const unitsQuery = `
+        SELECT id, unit_number, bedrooms, bathrooms, sq_ft, market_rent, status
+        FROM units
+        WHERE property_id = $1
+        ORDER BY unit_number ASC
+    `;
+
+    const unitsResult = await db.query(unitsQuery, [property.id]);
+
+    // 3. Attach units to the property object
+    property.units = unitsResult.rows;
+
+    return property;
 };
 
 /**

@@ -44,10 +44,14 @@ export const addLocalVariables = (req, res, next) => {
 
     // Convenience variable for UI state based on session state
     res.locals.isLoggedIn = false;
+    res.locals.user = null; // Default to null
+
     if (req.session && req.session.user) {
         res.locals.isLoggedIn = true;
+        // This is the key line! 
+        // It passes the database user (with the role) to EJS
+        res.locals.user = req.session.user; 
     }
 
-    
     next();
 };

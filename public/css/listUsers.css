@@ -1,0 +1,109 @@
+/* --- 7. USERS PAGE STYLES --- */
+
+.users-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.users-container h1 {
+    color: var(--primary);
+    margin-bottom: 30px;
+    font-size: 2rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+}
+
+/* Grid Layout */
+.users-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* Individual User Card */
+.user-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.user-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.user-card h3 {
+    margin-top: 0;
+    color: var(--primary);
+    font-size: 1.25rem;
+    border-bottom: 1px solid var(--bg);
+    padding-bottom: 10px;
+}
+
+.user-details p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.user-details strong {
+    color: var(--primary);
+    width: 60px;
+    display: inline-block;
+}
+
+/* Action Buttons */
+.user-actions {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+}
+
+.edit-link, .delete-btn {
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.edit-link {
+    background-color: var(--accent);
+    color: white !important;
+}
+
+.delete-btn {
+    background-color: #e74c3c; /* Soft Red */
+    color: white;
+    border: none;
+}
+
+.edit-link:hover, .delete-btn:hover {
+    opacity: 0.85;
+}
+
+/* Empty State */
+.no-users {
+    text-align: center;
+    padding: 50px;
+    background: var(--white);
+    border-radius: 8px;
+    color: #888;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .users-list {
+        grid-template-columns: 1fr;
+    }
+}

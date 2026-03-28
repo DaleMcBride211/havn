@@ -1,0 +1,95 @@
+/* --- 7. FORM & EDIT PAGE STYLES --- */
+main {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    color: var(--primary);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+form {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+form div {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Button Container */
+button[type="submit"] {
+    background: var(--primary);
+    color: var(--white);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%; /* Full width on mobile */
+}
+
+button[type="submit"]:hover {
+    background: var(--accent);
+}
+
+form a {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: #7f8c8d;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+
+/* Tablet/Desktop Button layout */
+@media (min-width: 480px) {
+    button[type="submit"] {
+        width: auto;
+        min-width: 150px;
+    }
+    
+    form a {
+        display: inline-block;
+        margin-top: 0;
+        margin-left: 1.5rem;
+    }
+}

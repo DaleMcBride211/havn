@@ -27,7 +27,8 @@ const propertyDetailPage = async (req, res, next) => {
     res.render('properties/detail', {
         title: specificProperty.name,
         stylesheet: 'propertyDetail.css',
-        specificProperty
+        specificProperty,
+        
     });
 };
 

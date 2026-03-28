@@ -2,118 +2,166 @@
 
 .container {
     max-width: 1000px;
-    margin: 40px auto;
-    padding: 0 20px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
 }
 
 .property-card {
     background: var(--white);
-    border-radius: 12px;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     border: 1px solid var(--border);
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* Title & ID Styling */
 .property-card h1 {
-    padding: 30px 30px 10px;
-    margin: 0;
+    margin-top: 0;
     color: var(--primary);
     font-size: 2rem;
 }
 
 .property-card h1 small {
-    font-size: 0.9rem;
-    color: #7f8c8d;
     font-weight: 400;
-    display: block;
-    margin-top: 5px;
+    color: #888;
+    font-size: 1rem;
 }
 
-/* Main Property Image */
-.property-card img {
+.property-hero {
     width: 100%;
     height: 450px;
-    object-fit: cover; /* Ensures image doesn't stretch */
-    display: block;
-    background-color: #eee;
+    object-fit: cover;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    background-color: #eee; /* Placeholder color while loading */
 }
 
-/* Sections Padding */
-.property-card section {
-    padding: 30px;
+/* Grid Layout for Info & Amenities */
+.property-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
-.property-card h3 {
-    margin-top: 0;
-    color: var(--primary);
-    border-left: 4px solid var(--accent);
-    padding-left: 15px;
-    margin-bottom: 20px;
-}
-
-/* Info Section */
-.info p {
+.property-details-grid h3 {
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 1rem;
     font-size: 1.1rem;
-    margin: 10px 0;
 }
 
-.info strong {
-    color: var(--primary);
-}
-
-/* Divider */
-.property-card hr {
-    border: 0;
-    border-top: 1px solid var(--border);
-    margin: 0 30px;
-}
-
-/* Amenities Grid */
 .amenities ul {
     list-style: none;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
 }
 
 .amenities li {
-    background: var(--bg);
-    padding: 12px 15px;
-    border-radius: 6px;
     font-size: 0.95rem;
+    text-transform: capitalize;
+}
+
+/* Units Table */
+.units-list {
+    margin-top: 2rem;
+}
+
+.units-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.units-table th {
+    text-align: left;
+    background: #fcfcfc;
+    padding: 12px;
+    border-bottom: 2px solid var(--border);
+    font-weight: 600;
+}
+
+.units-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid var(--border);
+    font-variant-numeric: tabular-nums; /* Keeps numbers aligned */
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.status-vacant { background: #e3f9e5; color: #1f7a1f; }
+.status-occupied { background: #ebebeb; color: #666; }
+.status-maintenance { background: #fff4e5; color: #b7791f; }
+.status-pending { background: #e5f4ff; color: #2b6cb0; }
+
+/* Rent Now Button */
+.btn-rent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 12px;
+    padding: 6px 14px;
+    background-color: #1f7a1f; /* Matches .status-vacant text color */
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-rent:hover {
+    background-color: #165a16;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    color: var(--white);
+}
+
+.btn-rent:active {
+    transform: translateY(0);
+}
+
+/* Ensure the status cell handles both badge and button nicely */
+.units-table td:last-child {
     display: flex;
     align-items: center;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
-.amenities li:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
+/* Horizontal Rule Styling */
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
 }
 
-/* Responsiveness for Detail Page */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .container {
-        margin: 20px auto;
+    .property-details-grid {
+        grid-template-columns: 1fr;
     }
-
-    .property-card img {
+    
+    .property-hero {
         height: 250px;
     }
 
-    .property-card h1 {
-        font-size: 1.5rem;
-        padding: 20px;
-    }
-
-    .property-card section {
-        padding: 20px;
+    .units-table {
+        display: block;
+        overflow-x: auto; /* Allows table to scroll on small screens */
     }
 
     .amenities ul {
-        grid-template-columns: 1fr 1fr; /* Two columns on mobile */
+        grid-template-columns: 1fr;
     }
 }

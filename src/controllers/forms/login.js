@@ -9,7 +9,8 @@ const showLoginForm = (req, res) => {
     // TODO: Render the login form view (forms/login/form)
     // TODO: Pass title: 'User Login'
     res.render('forms/login/form', {
-        title: 'User Login'
+        title: 'User Login',
+        stylesheet: 'login.css'
     })
 };
 /**
@@ -48,8 +49,14 @@ const processLogin = async (req, res) => {
         // Store user in session
         req.session.user = sessionUser;
         
-        console.log('Login successful:', email);
-        return res.redirect('/dashboard');
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session Save Error:', err);
+                return res.redirect('/login');
+            }
+            console.log('Login successful and session saved:', email);
+            return res.redirect('/dashboard');
+        });
 
     } catch (error) {
         console.error('Login Process Error:', error);
@@ -114,6 +121,7 @@ const showDashboard = (req, res) => {
     // TODO: Pass title: 'Dashboard', user, and sessionData to template
     res.render('forms/login/dashboard', {
         title: 'Dashboard',
+        stylesheet: '',
         user,
         sessionData
     })

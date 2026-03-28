@@ -1,29 +1,43 @@
 <%- include('../../partials/header') %>
-<main>
+
+<main class="users-container">
     <h1><%= title %></h1>
 
     <% if (users && users.length > 0) { %>
         <div class="users-list">
             <% users.forEach(listUser => { %>
                 <% 
-                    // Calculate permissions for this user card
-                    // 'user' variable contains the current logged-in user (from session)
-                    // 'listUser' is the user from the users array we're currently rendering
-                    const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
-                    const canEdit = currentUser && (currentUser.id === listUser.id || currentUser.roleName === 'admin');
-                    const canDelete = currentUser && currentUser.roleName === 'admin' && currentUser.id !== listUser.id;
+                    // 1. Identify current user from session
+                    const currentUser = (typeof isLoggedIn !== 'undefined' && isLoggedIn) ? user : null;
+                    
+                    // 2. Permission logic based on your data structure
+                    // Edit: Allowed for admins OR the user themselves
+                    const canEdit = currentUser && (currentUser.id === listUser.id || currentUser.role === 'admin');
+                    
+                    // Delete: Allowed for admins ONLY, and they cannot delete themselves
+                    const canDelete = currentUser && currentUser.role === 'admin' && currentUser.id !== listUser.id;
                 %>
+
                 <div class="user-card">
-                    <h3><%= listUser.name %></h3>
-                    <p><%= listUser.email %></p>
+                    <h3><%= listUser.first_name %> <%= listUser.last_name %></h3>
+                    
+                    <div class="user-details">
+                        <p><strong>Email:</strong> <%= listUser.email %></p>
+                        <p><strong>Phone:</strong> <%= listUser.phone %></p>
+                        <p><strong>Role:</strong> <%= listUser.role %></p>
+                    </div>
+
                     <% if (canEdit || canDelete) { %>
                         <div class="user-actions">
                             <% if (canEdit) { %>
-                                <a href="/register/<%= listUser.id %>/edit">Edit</a>
+                                <a href="/register/<%= listUser.id %>/edit" class="edit-link">Edit</a>
                             <% } %>
+
                             <% if (canDelete) { %>
                                 <form method="POST" action="/register/<%= listUser.id %>/delete" style="display: inline;">
-                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                                    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this user?')">
+                                        Delete
+                                    </button>
                                 </form>
                             <% } %>
                         </div>
@@ -34,6 +48,6 @@
     <% } else { %>
         <p class="no-users">No users registered yet.</p>
     <% } %>
-
 </main>
+
 <%- include('../../partials/footer') %>

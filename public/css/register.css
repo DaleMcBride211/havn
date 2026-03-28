@@ -1,0 +1,102 @@
+/* --- 7. REGISTRATION FORM STYLES --- */
+main {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+main h1 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+main p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.registration-form {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--primary);
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.help-text {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 0.4rem;
+}
+
+/* Submit Button */
+.form-actions {
+    margin-top: 2rem;
+}
+
+.form-actions button {
+    width: 100%;
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 14px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.form-actions button:hover {
+    background-color: var(--accent);
+}
+
+/* Responsive adjustments for the name row */
+@media (max-width: 480px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .registration-form {
+        padding: 1.5rem;
+    }
+}

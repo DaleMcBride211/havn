@@ -85,19 +85,35 @@ const registrationValidation = [
 ];
 
 const updateAccountValidation = [
-    body('name')
+    body('firstName')
         .trim()
-        .isLength({ min: 2, max: 100 })
-        .withMessage('Name must be between 2 and 100 characters')
+        .isLength({ min: 2, max: 50 })
+        .withMessage('First name must be between 2 and 50 characters')
         .matches(/^[a-zA-Z\s'-]+$/)
-        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
+        .withMessage('First name can only contain letters, spaces, hyphens, and apostrophes'),
+    
+    body('lastName')
+        .trim()
+        .isLength({ min: 2, max: 50 })
+        .withMessage('Last name must be between 2 and 50 characters')
+        .matches(/^[a-zA-Z\s'-]+$/)
+        .withMessage('Last name can only contain letters, spaces, hyphens, and apostrophes'),
+
     body('email')
         .trim()
         .isEmail()
         .normalizeEmail()
         .withMessage('Must be a valid email address')
         .isLength({ max: 255 })
-        .withMessage('Email address is too long')
+        .withMessage('Email address is too long'),
+
+    body('phone')
+        .trim()
+        .notEmpty()
+        .withMessage('Phone number is required')
+        // Checks for a basic phone format (adjust regex based on your region)
+        .matches(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)
+        .withMessage('Please enter a valid phone number')
 ];
 
 
