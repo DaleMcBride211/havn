@@ -22,8 +22,12 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-// This is a fix for render to let it know that it is secure
+// Required for secure cookies on Render/Proxies
 app.set('trust proxy', 1);
+
+// --- EJS Configuration ---
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src/views'));
 
 const pgSession = connectPgSimple(session);
 
@@ -32,7 +36,6 @@ app.use(session({
     store: new pgSession({
         conObject: {
             connectionString: process.env.DB_URL,
-            // Configure SSL for session store connection
             ssl: {
                 ca: caCert,
                 rejectUnauthorized: true,
@@ -42,48 +45,62 @@ app.use(session({
         tableName: 'session',
         createTableIfMissing: true
     }),
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET, // Ensure this is a string in your .env
     resave: false,
     saveUninitialized: false,
     cookie: {
-        // Only use secure cookies in production (HTTPS)
         secure: NODE_ENV === 'production', 
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
-        sameSite: 'lax' // Helps ensure flash messages persist across redirects
+        sameSite: 'lax'
     }
 }));
 
+// Initialize cleanup utility
 startSessionCleanup();
 
-
+// Body parsing and static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
+// Custom Middlewares
 app.use(flash);
+app.use(addLocalVariables); // Injects isLoggedIn, user, etc.
 
-app.use(addLocalVariables);
-
-// --- EJS Configuration ---
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src/views'));
-
+// Routes
 app.use('/', routes);
 
-
+// 404 Handler
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
     err.status = 404;
     next(err);
 });
 
-
+// Final Error Handler (The Safety Net)
 app.use((err, req, res, next) => {
     if (res.headersSent || res.finished) return next(err);
+    
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
+
+    /**
+     * SAFETY NET: 
+     * If an error occurs before 'addLocalVariables' runs, 
+     * header.ejs will crash looking for these. We define defaults here.
+     */
+    res.locals.isLoggedIn = res.locals.isLoggedIn || !!(req.session && req.session.user);
+    res.locals.user = res.locals.user || (req.session?.user || null);
+    res.locals.currentYear = res.locals.currentYear || new Date().getFullYear();
+    res.locals.greeting = res.locals.greeting || ''; 
+    
+    // Ensure styles/scripts arrays exist for the error page
+    res.locals.styles = res.locals.styles || [];
+    res.locals.scripts = res.locals.scripts || [];
+    res.locals.renderStyles = res.locals.renderStyles || (() => '');
+    res.locals.renderScripts = res.locals.renderScripts || (() => '');
+
     res.status(status).render(`errors/${template}`, {
         title: status === 404 ? 'Page Not Found' : 'Server Error',
         error: NODE_ENV === 'production' ? 'An error occurred' : err.message,
@@ -92,9 +109,13 @@ app.use((err, req, res, next) => {
     });
 });
 
-
+// Start Server
 app.listen(PORT, async () => {
-    await setupDatabase();
-    await testConnection();
-    console.log(`Server is running on port: ${PORT}`);
+    try {
+        await setupDatabase();
+        await testConnection();
+        console.log(`Server is running on port: ${PORT}`);
+    } catch (error) {
+        console.error('Failed to initialize database:', error);
+    }
 });
