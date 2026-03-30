@@ -78,24 +78,27 @@ app.use((req, res, next) => {
     next(err);
 });
 
-// Final Error Handler (The Safety Net)
+// Final Error Handler (The Bulletproof Version)
 app.use((err, req, res, next) => {
     if (res.headersSent || res.finished) return next(err);
     
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
 
-    /**
-     * SAFETY NET: 
-     * If an error occurs before 'addLocalVariables' runs, 
-     * header.ejs will crash looking for these. We define defaults here.
-     */
+    // --- FIX FOR "flash is not defined" ---
+    // If the flash middleware didn't run, we provide a dummy function 
+    // that returns an empty object so the header doesn't crash.
+    if (typeof res.locals.flash !== 'function') {
+        res.locals.flash = () => ({}); 
+    }
+
+    // Safety net for other global variables
     res.locals.isLoggedIn = res.locals.isLoggedIn || !!(req.session && req.session.user);
     res.locals.user = res.locals.user || (req.session?.user || null);
     res.locals.currentYear = res.locals.currentYear || new Date().getFullYear();
     res.locals.greeting = res.locals.greeting || ''; 
     
-    // Ensure styles/scripts arrays exist for the error page
+    // Ensure styles/scripts arrays exist
     res.locals.styles = res.locals.styles || [];
     res.locals.scripts = res.locals.scripts || [];
     res.locals.renderStyles = res.locals.renderStyles || (() => '');
