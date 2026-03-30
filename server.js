@@ -27,7 +27,7 @@ app.set('trust proxy', 1);
 
 // --- EJS Configuration ---
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src/views'));
+app.set('views', path.join(__dirname, '/views'));
 
 const pgSession = connectPgSimple(session);
 
