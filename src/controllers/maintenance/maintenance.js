@@ -2,7 +2,8 @@ import { validationResult } from 'express-validator';
 import { 
     getAllMaintenanceRequests,
     getMaintenanceRequestById,
-    createMaintenanceRequest
+    createMaintenanceRequest,
+    updateMaintenanceRequest
 } from '../../models/maintenance/maintenance.js';
 import { getAvailableUnitsForUser } from '../../models/maintenance/maintenance.js';
 
@@ -32,7 +33,7 @@ const maintenanceDetailPage = async (req, res, next) => {
 
         res.render('maintenance/detail', {
             title: specificRequest.details?.property || 'Request Details',
-            stylesheet: 'requestDetail.css',
+            stylesheet: 'maintenanceDetail.css',
             specificRequest
         });
     } catch (error) {
@@ -54,7 +55,7 @@ const createMaintananceRequestPage = async (req, res, next) => {
         res.render('maintenance/create', {
             title: 'Submit Maintenance Request',
             stylesheet: 'maintenanceForm.css',
-            units // <--- THIS is the magic line that fixes your error!
+            units
         });
     } catch (error) {
         next(error);
@@ -98,9 +99,59 @@ const handleCreateMaintenanceRequest = async (req, res, next) => {
     }
 };
 
+const updateMaintenanceRequestPage = async (req, res, next) => {
+    try {
+        const requestId = req.params.id;
+        const specificRequest = await getMaintenanceRequestById(requestId);
+
+        if (!specificRequest) {
+            req.flash('error', `Maintenance Request #${requestId} not found.`);
+            return res.redirect('/maintenance');
+        }
+
+        res.render('maintenance/updateDetail', {
+            title: specificRequest.details?.property || 'Update Request Details',
+            stylesheet: 'maintenanceUpdateRequest.css',
+            specificRequest
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const handleUpdateMaintenanceRequest = async (req, res, next) => {
+    try {
+        const requestId = req.params.id;
+        const { title, description, priority, status, cost } = req.body;
+
+        // Perform the update
+        const updatedRequest = await updateMaintenanceRequest(requestId, {
+            title,
+            description,
+            priority,
+            status,
+            cost
+        });
+
+        if (!updatedRequest) {
+            req.flash('error', 'Could not find the request to update.');
+            return res.redirect('/maintenance');
+        }
+
+        req.flash('success', `Maintenance Request #${requestId} successfully updated!`);
+        res.redirect(`/maintenance/${requestId}`); 
+    } catch (error) {
+        console.error("Error updating request:", error);
+        req.flash('error', 'There was an error updating the request. Please try again.');
+        res.redirect(`/maintenance/update/${req.params.id}`);
+    }
+};
+
 export { 
     maintenanceRequestPage, 
     maintenanceDetailPage, 
     createMaintananceRequestPage,
-    handleCreateMaintenanceRequest 
+    handleCreateMaintenanceRequest,
+    updateMaintenanceRequestPage,
+    handleUpdateMaintenanceRequest
 };

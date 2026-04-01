@@ -161,3 +161,36 @@ export const getAvailableUnitsForUser = async (userId, role) => {
         throw error;
     }
 };
+
+/**
+ * Updates an existing maintenance work order.
+ * @param {number|string} id - The ID of the work order.
+ * @param {Object} data - The updated data.
+ */
+export const updateMaintenanceRequest = async (id, data) => {
+    const { title, description, priority, status, cost } = data;
+    
+    const query = `
+        UPDATE work_orders 
+        SET 
+            title = COALESCE($1, title), 
+            description = COALESCE($2, description), 
+            priority = COALESCE($3, priority), 
+            status = COALESCE($4, status), 
+            cost = COALESCE($5, cost)
+        WHERE id = $6
+        RETURNING *;
+    `;
+
+    // We pass the cost, ensuring it defaults to 0 if not provided
+    const values = [title, description, priority, status, cost ? parseFloat(cost) : null, id];
+
+    try {
+        const result = await db.query(query, values);
+        if (result.rows.length === 0) return null; // No rows updated
+        return result.rows[0];
+    } catch (error) {
+        console.error(`Error updating maintenance request ${id}:`, error);
+        throw error;
+    }
+};

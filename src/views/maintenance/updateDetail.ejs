@@ -1,0 +1,58 @@
+<%- include('../partials/header') %>
+
+<main class="maintenance-page">
+    <div class="form-card">
+        <header class="form-header">
+            <h2>Update Maintenance Request #<%= specificRequest.id %></h2>
+            <p class="subtitle">Property: <%= specificRequest.details.property %> | Unit: <%= specificRequest.details.unit %></p>
+        </header>
+
+        <form action="/maintenance/update/<%= specificRequest.id %>" method="POST" class="maintenance-form">
+            
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" value="<%= specificRequest.title %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="5" required><%= specificRequest.description %></textarea>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" name="priority">
+                        <option value="low" <%= specificRequest.priority === 'low' ? 'selected' : '' %>>Low</option>
+                        <option value="medium" <%= specificRequest.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+                        <option value="high" <%= specificRequest.priority === 'high' ? 'selected' : '' %>>High</option>
+                        <option value="emergency" <%= specificRequest.priority === 'emergency' ? 'selected' : '' %>>Emergency</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="new" <%= specificRequest.status === 'new' ? 'selected' : '' %>>New</option>
+                        <option value="in_progress" <%= specificRequest.status === 'in_progress' ? 'selected' : '' %>>In Progress</option>
+                        <option value="on_hold" <%= specificRequest.status === 'on_hold' ? 'selected' : '' %>>On Hold</option>
+                        <option value="completed" <%= specificRequest.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                        <option value="cancelled" <%= specificRequest.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cost">Cost ($)</label>
+                    <input type="number" step="0.01" id="cost" name="cost" value="<%= specificRequest.cost %>">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save Changes</button>
+                <a href="/maintenance/<%= specificRequest.id %>" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>
