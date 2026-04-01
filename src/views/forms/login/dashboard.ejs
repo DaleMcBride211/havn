@@ -1,38 +1,178 @@
 <%- include('../../partials/header') %>
-<main>
-    <div class="dashboard">
-        <h1>Welcome to Your Dashboard</h1>
-        <p>
-            This is a protected page that requires authentication. Only logged-in users can access this content.
-        </p>
 
-        <div class="user-info">
-            <h2>Your Account Information</h2>
-            
-            <div class="user-detail">
-                <span class="label">Name:</span>
-                <span class="value"><%= user.first_name %> <%= user.last_name %></span>
+<main class="container">
+    <header class="page-header d-flex justify-content-between align-items-end">
+        <div>
+            <h1><%= title %></h1>
+            <p class="text-muted">Manage your rental agreement and view history.</p>
+        </div>
+    </header>
+
+    <hr>
+
+    <% if (!activeLease) { %>
+        <section class="empty-state">
+            <div class="alert alert-info">
+                <h3>No Active Lease Found</h3>
+                <p>It looks like you don't have an active lease agreement on file. If you believe this is an error, please contact your property manager.</p>
             </div>
+        </section>
+    <% } else { %>
+        <div class="lease-grid">
+            <section class="lease-card">
+                <div class="card-header">
+                    <h2>Current Lease: <%= activeLease.unit.number %></h2>
+                    <span class="badge badge-active"><%= activeLease.status %></span>
+                </div>
+                
+                <div class="card-body">
+                    <div class="info-group">
+                        <label>Term</label>
+                        <p><strong><%= activeLease.startDate %></strong> to <strong><%= activeLease.endDate %></strong></p>
+                    </div>
 
-            <div class="user-detail">
-                <span class="label">Email:</span>
-                <span class="value"><%= user.email %></span>
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>Monthly Rent</label>
+                            <p class="price-text">$<%= activeLease.monthlyRent.toLocaleString() %></p>
+                        </div>
+                        <div class="info-group">
+                            <label>Security Deposit</label>
+                            <p>$<%= activeLease.securityDeposit.toLocaleString() %></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="property-sidebar">
+                <div class="card">
+                    <h3>Property Details</h3>
+                    <p><strong><%= activeLease.property.name %></strong></p>
+                    <address>
+                        <%= activeLease.property.fullAddress %>
+                    </address>
+                    <hr>
+                    <p><strong>Unit Features:</strong></p>
+                    <ul>
+                        <li>Bedrooms: <%= activeLease.unit.bedrooms %></li>
+                        <li>Bathrooms: <%= activeLease.unit.bathrooms %></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    <% } %>
+
+    <section class="user-info-section" style="margin-top: 2rem;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h3 class="m-0">Tenant Profile</h3>
+                <span class="badge badge-secondary">Account ID: #<%= user.id %></span>
             </div>
-
-            <div class="user-detail">
-                <span class="label">Role:</span>
-                <span class="value"><%= user.role %></span>
-            </div>
-
-            <div class="user-detail">
-                <span class="label">Member Since:</span>
-                <span class="value"><%= new Date(user.created_at).toLocaleDateString() %></span>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="text-muted small text-uppercase font-weight-bold">Full Name</label>
+                        <p class="h5"><%= user.first_name %> <%= user.last_name %></p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="text-muted small text-uppercase font-weight-bold">Email Address</label>
+                        <p><%= user.email %></p>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="text-muted small text-uppercase font-weight-bold">Phone Number</label>
+                        <p><%= user.phone || 'No phone number on file' %></p>
+                    </div>
+                </div>
+                <div class="row border-top pt-3 mt-2">
+                    <div class="col-12">
+                        <a href="/register/<%= user.id %>/edit" class="btn btn-sm btn-outline-primary">Update Profile Information</a>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="dashboard-actions">
-            <a href="/logout" class="logout-button">Logout</a>
+    <section class="maintenance-section mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Maintenance Requests</h3>
+            <a href="/maintenance/new" class="btn btn-primary btn-sm">+ Submit New Request</a>
         </div>
-    </div>
+
+        <% if (workOrders && workOrders.length > 0) { %>
+            <div class="table-responsive">
+                <table class="table table-hover border">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Issue</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Assigned Vendor</th>
+                            <th>Date Filed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% workOrders.forEach(order => { %>
+                            <tr>
+                                <td>
+                                    <strong><%= order.title %></strong><br>
+                                    <small class="text-muted"><%= order.description %></small>
+                                </td>
+                                <td>
+                                    <% 
+                                        let pClass = 'secondary';
+                                        if(order.priority === 'emergency') pClass = 'danger';
+                                        else if(order.priority === 'high') pClass = 'warning';
+                                    %>
+                                    <span class="badge badge-<%= pClass %> text-uppercase"><%= order.priority %></span>
+                                </td>
+                                <td>
+                                    <span class="status-tag status-<%= order.status %>"><%= order.status %></span>
+                                </td>
+                                <td><%= order.vendor_name || 'TBD' %></td>
+                                <td><%= new Date(order.created_at).toLocaleDateString() %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="card p-4 text-center bg-light">
+                <p class="text-muted m-0">You have no active maintenance requests at this time.</p>
+            </div>
+        <% } %>
+    </section>
+
+    <hr class="my-5">
+
+    <section class="history-section">
+        <h3>Lease History</h3>
+        <% if (leaseHistory && leaseHistory.length > 0) { %>
+            <div class="table-responsive">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Property / Unit</th>
+                            <th>Rent</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% leaseHistory.forEach(history => { %>
+                            <tr>
+                                <td><%= history.period %></td>
+                                <td><%= history.property %> - <%= history.unit %></td>
+                                <td>$<%= parseFloat(history.rent).toLocaleString() %></td>
+                                <td><span class="status-tag"><%= history.status %></span></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p class="text-muted">No previous lease history found.</p>
+        <% } %>
+    </section>
 </main>
+
 <%- include('../../partials/footer') %>

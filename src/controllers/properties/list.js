@@ -1,4 +1,4 @@
-import { getProperties, getPropertyById } from '../../models/properties/list.js'
+import { getProperties, getPropertyById } from '../../models/properties/list.js';
 
 const propertyListPage = async (req, res) => {
 

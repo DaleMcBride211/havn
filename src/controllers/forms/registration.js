@@ -9,7 +9,7 @@ import {
     updateUser,
     deleteUser
 } from '../../models/forms/registration.js';
-import { requireLogin } from '../../middleware/auth.js';
+import { requireLogin, requireRole } from '../../middleware/auth.js';
 import { registrationValidation, updateAccountValidation } from '../../middleware/validation/forms.js'
 
 const router = Router();
@@ -203,7 +203,7 @@ router.get('/', showRegistrationForm);
 router.post('/', registrationValidation, processRegistration);
 
 /** GET /register/list - Display all registered users */
-router.get('/list', showAllUsers); 
+router.get('/list', requireRole('admin'), showAllUsers); 
 
 
 // --- 2. Dynamic / Parameterized Routes (Check these last) ---

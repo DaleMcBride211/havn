@@ -74,3 +74,22 @@ export const getLeaseHistoryByTenant = async (tenantId) => {
         rent: row.monthly_rent
     }));
 };
+
+/**
+ * Fetches all maintenance work orders submitted by a specific user.
+ */
+export const getWorkOrdersByTenant = async (tenantId) => {
+    const query = `
+        SELECT 
+            wo.id, wo.title, wo.description, wo.priority, wo.status, 
+            wo.cost, wo.created_at,
+            v.company_name as vendor_name
+        FROM work_orders wo
+        LEFT JOIN vendors v ON wo.vendor_id = v.id
+        WHERE wo.requester_id = $1
+        ORDER BY wo.created_at DESC
+    `;
+
+    const result = await db.query(query, [tenantId]);
+    return result.rows;
+};

@@ -101,34 +101,10 @@ const processLogout = (req, res) => {
         res.redirect('/');
     });
 };
-/**
- * Display protected dashboard (requires login).
- */
-const showDashboard = (req, res) => {
-    const user = req.session.user;
-    const sessionData = req.session;
-    // Security check! Ensure user and sessionData do not contain password field
-    if (user && user.password) {
-        req.flash('error', 'Security error: password found in user object')
-        delete user.password;
-    }
-    if (sessionData.user && sessionData.user.password) {
-        
-        req.flash('error', 'Security error: password found in sessionData.user')
-        delete sessionData.user.password;
-    }
-    // TODO: Render the dashboard view (dashboard)
-    // TODO: Pass title: 'Dashboard', user, and sessionData to template
-    res.render('forms/login/dashboard', {
-        title: 'Dashboard',
-        stylesheet: '',
-        user,
-        sessionData
-    })
-};
+
 // Routes
 router.get('/', showLoginForm);
 router.post('/', loginValidation, processLogin);
 // Export router as default, and specific functions for root-level routes
 export default router;
-export { processLogout, showDashboard };
+export { processLogout };

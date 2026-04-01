@@ -1,0 +1,81 @@
+<%- include('../partials/header') %>
+
+<div class="maintenance-container">
+    <nav class="detail-nav">
+        <a href="/maintenance" class="btn-back">
+            <span class="arrow">←</span> Back to Maintenance Dashboard
+        </a>
+    </nav>
+
+    <div class="detail-grid">
+        <main class="detail-main-card">
+            <div class="card-header">
+                <div class="header-info">
+                    <span class="text-id">WORK ORDER #<%= specificRequest.id %></span>
+                    <h1><%= specificRequest.title %></h1>
+                    <span class="date-stamp">Submitted on <%= new Date(specificRequest.createdAt).toLocaleDateString() %></span>
+                </div>
+                <div class="header-badges">
+                    <span class="priority-tag p-<%= specificRequest.priority %>"><%= specificRequest.priority %></span>
+                    <span class="status-pill"><%= specificRequest.status %></span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <label class="section-label">Issue Description</label>
+                <div class="description-box">
+                    <%= specificRequest.description %>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Property</label>
+                    <p class="text-main"><%= specificRequest.details.property %></p>
+                </div>
+                <div class="info-item">
+                    <label>Apartment</label>
+                    <p class="text-main">Unit <%= specificRequest.details.unit %></p>
+                </div>
+                <div class="info-item">
+                    <label>Resident</label>
+                    <p class="text-main"><%= specificRequest.details.tenantName %></p>
+                </div>
+                <div class="info-item">
+                    <label>Estimated Cost</label>
+                    <p class="text-main">$<%= specificRequest.cost.toFixed(2) %></p>
+                </div>
+            </div>
+        </main>
+
+        <aside class="detail-sidebar">
+            <div class="sidebar-card">
+                <h3>Assignments</h3>
+                
+                <div class="assignment-item">
+                    <label>Internal Manager</label>
+                    <p><%= specificRequest.details.managerName %></p>
+                </div>
+
+                <div class="assignment-item">
+                    <label>Assigned Vendor</label>
+                    <p><%= specificRequest.details.vendor %></p>
+                </div>
+
+                <hr class="divider">
+
+                <div class="sidebar-actions">
+                    <button class="btn-primary-sm full-width">Update Status</button>
+                    <button class="btn-secondary-outline full-width">Edit Details</button>
+                    <button class="btn-danger-text">Archive specificRequest</button>
+                </div>
+            </div>
+
+            <div class="sidebar-help">
+                <p>Need to contact the vendor? <br><a href="#">View Vendor Directory</a></p>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

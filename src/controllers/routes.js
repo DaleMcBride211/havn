@@ -3,9 +3,10 @@ import { homePage, aboutPage } from './index.js';
 import { propertyListPage, propertyDetailPage } from './properties/list.js';
 import loginRoutes from './forms/login.js';
 import registrationRoutes from './forms/registration.js';
-import { processLogout, showDashboard } from './forms/login.js';
-import { requireLogin } from '../middleware/auth.js';
-import { tenantLeasePage } from './leaseunit/lease.js';
+import { processLogout } from './forms/login.js';
+import { requireLogin, requireRole } from '../middleware/auth.js';
+import { dashboardPage } from './dashboard/dashboard.js';
+import { maintenanceRequestPage, maintenanceDetailPage, createMaintananceRequestPage } from './requests/maintenance.js';
 
 const router = Router();
 
@@ -20,14 +21,16 @@ router.get('/properties/:id', propertyDetailPage);
 
 router.use('/register', registrationRoutes);
 
-router.get('/leaseunit', requireLogin, tenantLeasePage);
+router.get('/dashboard', requireLogin, dashboardPage);
 
-// router.get('/maintenance', );
+router.get('/maintenance', maintenanceRequestPage);
+
+router.get('/maintenance/new', createMaintananceRequestPage);
+
+router.get('/maintenance/:id', maintenanceDetailPage);
 
 router.use('/login', loginRoutes);
 
 router.get('/logout', processLogout);
-
-router.get('/dashboard', requireLogin, showDashboard);
 
 export default router;

@@ -1,0 +1,136 @@
+<%- include('../partials/header') %>
+
+<div class="maintenance-container">
+    <header class="page-header">
+        <div class="header-text">
+            <h1><%= title %></h1>
+            <p class="text-sub">Review and manage active property work orders</p>
+        </div>
+        <div class="header-stats">
+            <span class="request-count-badge">
+                <strong id="visible-count text-accent"><%= maintenanceRequests.length %></strong> Total Requests
+            </span>
+        </div>
+    </header>
+
+    <section class="filter-bar">
+        <div class="filter-group">
+            <label for="filter-priority">Filter by Priority</label>
+            <select id="filter-priority">
+                <option value="all">All Priorities</option>
+                <option value="emergency">Emergency</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="filter-status">Filter by Status</label>
+            <select id="filter-status">
+                <option value="all">All Statuses</option>
+                <option value="new">New</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+        <button id="reset-filters" class="btn-reset">Clear Filters</button>
+    </section>
+
+    <div class="table-wrapper">
+        <table class="maintenance-table">
+            <thead>
+                <tr>
+                    <th>Work Order</th>
+                    <th>Location</th>
+                    <th>Requested By</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Assignment</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <% if (maintenanceRequests.length > 0) { %>
+                    <% maintenanceRequests.forEach(request => { %>
+                        <tr class="request-row" 
+                            data-priority="<%= request.priority %>"
+                            data-status="<%= request.status.toLowerCase() %>">
+                            
+                            <td data-label="Work Order">
+                                <span class="text-main"><%= request.title %></span>
+                                <span class="text-id">#<%= request.id %> • <%= new Date(request.createdAt).toLocaleDateString() %></span>
+                            </td>
+                            <td data-label="Location">
+                                <span class="text-main"><%= request.details.property %></span>
+                                <span class="unit-tag">Unit <%= request.details.unit %></span>
+                            </td>
+                            <td data-label="Requested By">
+                                <span class="text-main"><%= request.details.tenantName %></span>
+                                <span class="text-sub">Resident</span>
+                            </td>
+                            <td data-label="Priority">
+                                <span class="priority-tag p-<%= request.priority %>">
+                                    <%= request.priority %>
+                                </span>
+                            </td>
+                            <td data-label="Status">
+                                <span class="status-pill"><%= request.status %></span>
+                            </td>
+                            <td data-label="Assignment">
+                                <span class="text-main"><%= request.details.managerName %></span>
+                                <span class="text-sub">Vendor: <%= request.details.vendor %></span>
+                            </td>
+                            <td data-label="Actions">
+                                <a href="/maintenance/<%= request.id %>" class="btn-action">View</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="7" class="empty-state">No requests found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const prioritySelect = document.getElementById('filter-priority');
+    const statusSelect = document.getElementById('filter-status');
+    const resetBtn = document.getElementById('reset-filters');
+    const rows = document.querySelectorAll('.request-row');
+    const countDisplay = document.getElementById('visible-count');
+
+    function filterTable() {
+        const priorityQuery = prioritySelect.value;
+        const statusQuery = statusSelect.value;
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const matchesPriority = priorityQuery === 'all' || row.dataset.priority === priorityQuery;
+            const matchesStatus = statusQuery === 'all' || row.dataset.status === statusQuery;
+
+            if (matchesPriority && matchesStatus) {
+                row.style.display = "";
+                visibleCount++;
+            } else {
+                row.style.display = "none";
+            }
+        });
+        countDisplay.textContent = visibleCount;
+    }
+
+    [prioritySelect, statusSelect].forEach(el => {
+        el.addEventListener('change', filterTable);
+    });
+
+    resetBtn.addEventListener('click', () => {
+        prioritySelect.value = 'all';
+        statusSelect.value = 'all';
+        filterTable();
+    });
+</script>
+
+<%- include('../partials/footer') %>

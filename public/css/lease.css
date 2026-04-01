@@ -1,42 +1,50 @@
-/* --- 7. LEASE PAGE SPECIFIC STYLES --- */
-
+/* --- 1. LAYOUT & CONTAINERS --- */
 .container {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 20px;
+    padding: 0 1.5rem;
 }
 
 .page-header {
     margin-bottom: 2rem;
 }
 
-.text-muted {
-    color: #6c757d;
-}
-
-/* Lease Grid Layout */
 .lease-grid {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 2fr 1fr;
     gap: 2rem;
-    margin-top: 2rem;
+    margin-bottom: 3rem;
 }
 
-/* Cards */
-.lease-card, .card {
+/* --- 2. CARDS & SECTIONS --- */
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.lease-card {
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-header {
-    padding: 1.5rem;
+    background: #fcfcfc;
     border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fcfcfc;
 }
 
 .card-header h2, .card-header h3 {
@@ -49,19 +57,17 @@
     padding: 1.5rem;
 }
 
-/* Info Groups */
-.info-row {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1.5rem;
+/* --- 3. INFO GROUPS --- */
+.info-group {
+    margin-bottom: 1.5rem;
 }
 
 .info-group label {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    color: #7f8c8d;
-    font-weight: 600;
+    letter-spacing: 1px;
+    color: #888;
     margin-bottom: 0.25rem;
 }
 
@@ -70,113 +76,89 @@
     font-size: 1.1rem;
 }
 
+.info-row {
+    display: flex;
+    gap: 2rem;
+}
+
 .price-text {
     font-size: 1.5rem !important;
     font-weight: 700;
     color: var(--primary);
 }
 
-/* Badges & Tags */
-.badge {
-    padding: 6px 12px;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.badge-active {
-    background: #e1f5fe;
-    color: #0288d1;
-}
-
-.badge-secondary {
-    background: #eeeeee;
-    color: #616161;
-}
-
-.status-tag {
-    background: #f1f3f5;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-}
-
-/* Sidebar List */
-.property-sidebar ul {
-    padding-left: 1.2rem;
-    margin: 1rem 0 0;
-}
-
-.property-sidebar li {
-    margin-bottom: 0.5rem;
-}
-
-/* History Table */
+/* --- 4. TABLES (Lease History & Maintenance) --- */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
     background: var(--white);
     border-radius: 8px;
-    border: 1px solid var(--border);
 }
 
-.history-table {
+table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
+    margin-top: 1rem;
 }
 
-.history-table th {
-    background: #f8f9fa;
-    padding: 1rem;
+th {
+    background-color: #f8f9fa;
+    color: var(--primary);
     font-weight: 600;
+    text-align: left;
+    padding: 1rem;
     border-bottom: 2px solid var(--border);
 }
 
-.history-table td {
+td {
     padding: 1rem;
     border-bottom: 1px solid var(--border);
+    vertical-align: middle;
 }
 
-/* Row & Column Helpers (for the Tenant Profile section) */
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -15px;
+/* --- 5. BADGES & STATUS TAGS --- */
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
-.col-md-4 {
-    flex: 0 0 33.333%;
-    padding: 0 15px;
-}
+.badge-active { background: #e3f2fd; color: #1976d2; }
+.badge-secondary { background: #eee; color: #666; }
 
-.col-12 {
-    flex: 0 0 100%;
-    padding: 0 15px;
-}
-
-.btn-outline-primary {
-    border: 1px solid var(--primary);
-    color: var(--primary);
-    padding: 8px 16px;
+/* Status tags for Work Orders */
+.status-tag {
+    padding: 4px 10px;
     border-radius: 4px;
-    text-decoration: none;
-    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    display: inline-block;
+    background: #f1f3f5;
+    color: #495057;
 }
 
-.btn-outline-primary:hover {
-    background: var(--primary);
-    color: var(--white);
-}
+/* Match your DB Enum Statuses */
+.status-new { background-color: #e7f5ff; color: #1c7ed6; }
+.status-in_progress { background-color: #fff4e6; color: #d9480f; }
+.status-completed { background-color: #ebfbee; color: #2b8a3e; }
+.status-cancelled { background-color: #f8f9fa; color: #adb5bd; }
 
-/* Responsive Tweaks */
+/* Bootstrap alignment helpers (if not using full Bootstrap) */
+.mt-5 { margin-top: 3rem; }
+.mb-3 { margin-bottom: 1rem; }
+.text-muted { color: #6c757d !important; }
+.d-flex { display: flex; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+
+/* --- 6. RESPONSIVE --- */
 @media (max-width: 992px) {
     .lease-grid {
         grid-template-columns: 1fr;
     }
     
-    .col-md-4 {
-        flex: 0 0 100%;
+    .property-sidebar {
+        order: -1; /* Put property details on top for mobile */
     }
 }

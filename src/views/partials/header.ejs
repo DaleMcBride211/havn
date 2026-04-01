@@ -26,14 +26,16 @@
                     <li><a href="/dashboard">Dashboard</a></li>
 
                     <% if (user.role === 'tenant') { %>
-                        <li><a href="/leaseunit">My Unit</a></li>
-                        <li><a href="/maintenance">Maintenance Requests</a></li>
+                        
                     <% } %>
 
                     <% if (user.role === 'admin' || user.role === 'manager') { %>
-                        <li><a href="/register/list">All Users</a></li>
+                        <li><a href="/maintenance">Manage Requests</a></li>
                         <li><a href="/contact/responses">Contact Responses</a></li>
-                        <li><a href="/maintenance/all">Manage Requests</a></li>
+                    <% } %>
+
+                    <% if (user.role === 'admin') { %>
+                        <li><a href="/register/list">All Users</a></li>
                     <% } %>
 
                     <li><a href="/logout">Logout</a></li>
