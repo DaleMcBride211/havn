@@ -116,10 +116,68 @@ const updateAccountValidation = [
         .withMessage('Please enter a valid phone number')
 ];
 
+const maintenanceUpdateValidation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Title is required')
+    .isLength({ min: 5, max: 100 })
+    .withMessage('Title must be between 5 and 100 characters'),
+
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Description is required')
+    .isLength({ min: 10, max: 1000 })
+    .withMessage('Description must be between 10 and 1000 characters'),
+
+  body('priority')
+    .isIn(['low', 'medium', 'high', 'emergency'])
+    .withMessage('Please select a valid priority level'),
+
+  body('status')
+    .isIn(['new', 'in_progress', 'on_hold', 'completed', 'cancelled'])
+    .withMessage('Please select a valid status'),
+
+  body('cost')
+    .optional({ checkFalsy: true })
+    .isFloat({ min: 0 })
+    .withMessage('Cost must be a positive number')
+    .customSanitizer(value => value || 0) // Defaults to 0 if empty string provided
+];
+
+const maintenanceCreateValidation = [
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Issue summary is required')
+    .isLength({ min: 5, max: 100 })
+    .withMessage('Summary must be between 5 and 100 characters'),
+
+  body('unitId')
+    .notEmpty()
+    .withMessage('Please select a unit')
+    .isInt()
+    .withMessage('Invalid unit selection'),
+
+  body('priority')
+    .isIn(['low', 'medium', 'high', 'emergency'])
+    .withMessage('Please select a valid priority level'),
+
+  body('description')
+    .trim()
+    .notEmpty()
+    .withMessage('Detailed description is required')
+    .isLength({ min: 10, max: 2000 })
+    .withMessage('Description must be between 10 and 2000 characters')
+];
+
 
 export { 
     contactValidation, 
     registrationValidation, 
     loginValidation,
-    updateAccountValidation
+    updateAccountValidation,
+    maintenanceUpdateValidation,
+    maintenanceCreateValidation
 };

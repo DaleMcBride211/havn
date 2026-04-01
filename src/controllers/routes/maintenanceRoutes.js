@@ -8,6 +8,7 @@ import {
     handleUpdateMaintenanceRequest
 } from '../maintenance/maintenance.js'; 
 import { requireLogin } from '../../middleware/auth.js';
+import { maintenanceUpdateValidation, maintenanceCreateValidation } from '../../middleware/validation/forms.js';
 
 const router = Router();
 
@@ -17,10 +18,10 @@ router.use(requireLogin);
 router.get('/', maintenanceRequestPage);
 
 router.get('/new', createMaintananceRequestPage);
-router.post('/new', handleCreateMaintenanceRequest);
+router.post('/new', maintenanceCreateValidation, handleCreateMaintenanceRequest);
 
 router.get('/update/:id', updateMaintenanceRequestPage);
-router.post('/update/:id', handleUpdateMaintenanceRequest);
+router.post('/update/:id', maintenanceUpdateValidation, handleUpdateMaintenanceRequest);
 
 router.get('/:id', maintenanceDetailPage);
 
