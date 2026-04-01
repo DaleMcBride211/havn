@@ -7,7 +7,13 @@
             <p>Please describe the issue in detail. We will notify you once a manager is assigned.</p>
         </header>
 
-        <form action="/maintenance/create" method="POST" class="styled-form">
+        <% if (locals.messages && locals.messages.error) { %>
+            <div class="alert alert-error" style="color: red; margin-bottom: 1rem;">
+                <%= messages.error %>
+            </div>
+        <% } %>
+
+        <form action="/maintenance/new" method="POST" class="styled-form">
             <div class="form-group">
                 <label for="title">Issue Summary</label>
                 <input type="text" id="title" name="title" placeholder="e.g., HVAC not cooling" required>
@@ -15,8 +21,19 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="unitId">Unit ID</label>
-                    <input type="number" id="unitId" name="unitId" placeholder="101" required>
+                    <label for="unitId">Unit</label>
+                    <select id="unitId" name="unitId" required>
+                        <option value="" disabled selected>Select your unit...</option>
+                        <% if (units && units.length > 0) { %>
+                            <% units.forEach(unit => { %>
+                                <option value="<%= unit.id %>">
+                                    <%= unit.property_name %> - Unit <%= unit.unit_number %>
+                                </option>
+                            <% }) %>
+                        <% } else { %>
+                            <option value="" disabled>No units available</option>
+                        <% } %>
+                    </select>
                 </div>
 
                 <div class="form-group">

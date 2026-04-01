@@ -11,7 +11,7 @@ import { setupDatabase, testConnection } from './src/models/setup.js';
 import { startSessionCleanup } from './src/utils/session-cleanup.js';
 import flash from './src/middleware/flash.js';
 
-import routes from './src/controllers/routes.js';
+import routes from './src/controllers/routes/routes.js';
 import { addLocalVariables } from './src/middleware/global.js';
 
 const __filename = fileURLToPath(import.meta.url);

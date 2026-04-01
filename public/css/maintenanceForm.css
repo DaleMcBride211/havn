@@ -1,107 +1,150 @@
-/* Container for the page content */
+/* --- MAINTENANCE FORM SPECIFIC CSS --- */
+
 .maintenance-form-page {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 0 20px;
-    min-height: 60vh;
+    padding: 3rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 200px); /* Keeps footer at the bottom */
 }
 
-/* The card surrounding the form */
 .form-card {
     background: var(--white);
-    padding: 40px;
+    width: 100%;
+    max-width: 650px;
+    padding: 2.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
     border: 1px solid var(--border);
 }
 
 .form-header {
-    margin-bottom: 30px;
-    border-bottom: 2px solid var(--bg);
-    padding-bottom: 20px;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 .form-header h1 {
     color: var(--primary);
-    margin: 0 0 10px 0;
-    font-size: 1.8rem;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
 }
 
 .form-header p {
     color: #666;
     margin: 0;
+    font-size: 0.95rem;
 }
 
-/* Form Layout */
-.styled-form .form-group {
-    margin-bottom: 20px;
+/* --- FORM INPUTS & LAYOUT --- */
+
+.styled-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
 }
 
 .form-row {
     display: flex;
-    gap: 20px;
+    gap: 1.5rem;
 }
 
 .form-row .form-group {
-    flex: 1;
+    flex: 1; /* Makes side-by-side inputs share equal space */
 }
 
-/* Labels and Inputs */
-.styled-form label {
-    display: block;
+.form-group label {
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
     color: var(--primary);
     font-size: 0.9rem;
 }
 
-.styled-form input,
+/* Unified styling for all inputs */
+.styled-form input[type="text"],
+.styled-form input[type="number"],
 .styled-form select,
 .styled-form textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-family: inherit;
     font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    color: var(--text);
+    background-color: var(--white);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
 }
 
+/* Custom Select styling to make it look a bit sharper */
+.styled-form select {
+    cursor: pointer;
+    appearance: auto; /* Uses native dropdown arrow */
+}
+
+.styled-form textarea {
+    resize: vertical; /* Allows resizing only up and down */
+    min-height: 120px;
+}
+
+/* Focus States */
 .styled-form input:focus,
 .styled-form select:focus,
 .styled-form textarea:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15); /* Soft blue glow based on your accent */
 }
 
-/* Actions Area */
+/* --- FORM ACTIONS & BUTTONS --- */
+
 .form-actions {
     display: flex;
+    gap: 1rem;
     align-items: center;
-    gap: 20px;
-    margin-top: 30px;
+    margin-top: 1rem;
 }
 
+/* Styling for the cancel button (primary is already in global) */
 .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 8px 18px;
+    border-radius: 4px;
     text-decoration: none;
-    color: #7f8c8d;
-    font-weight: 500;
-    transition: color 0.2s;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-    color: var(--primary);
+    background: var(--bg);
+    border-color: #999;
 }
 
-/* Responsive adjust for mobile */
+/* --- RESPONSIVE ADJUSTMENTS --- */
+
 @media (max-width: 600px) {
+    .form-card {
+        padding: 1.5rem;
+    }
+
     .form-row {
         flex-direction: column;
         gap: 0;
     }
-    
-    .form-card {
-        padding: 20px;
+
+    .form-actions {
+        flex-direction: column-reverse; /* Puts primary button on top on mobile */
+    }
+
+    .form-actions button,
+    .form-actions a {
+        width: 100%;
+        text-align: center;
     }
 }

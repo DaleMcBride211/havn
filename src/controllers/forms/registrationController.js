@@ -9,8 +9,7 @@ import {
     updateUser,
     deleteUser
 } from '../../models/forms/registration.js';
-import { requireLogin, requireRole } from '../../middleware/auth.js';
-import { registrationValidation, updateAccountValidation } from '../../middleware/validation/forms.js'
+
 
 const router = Router();
 
@@ -18,7 +17,7 @@ const router = Router();
 /**
  * Display the registration form page.
  */
-const showRegistrationForm = (req, res) => {
+export const showRegistrationForm = (req, res) => {
     // TODO: Render the registration form view (forms/registration/form)
     // TODO: Pass title: 'User Registration' in the data object
     res.render('forms/registration/form', {
@@ -30,7 +29,7 @@ const showRegistrationForm = (req, res) => {
 /**
  * Handle user registration with validation and password hashing.
  */
-const processRegistration = async (req, res) => {
+export const processRegistration = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -75,7 +74,7 @@ const processRegistration = async (req, res) => {
 /**
  * Display all registered users.
  */
-const showAllUsers = async (req, res) => {
+export const showAllUsers = async (req, res) => {
     let users = [];
     try {
         users = await getAllUsers();
@@ -95,7 +94,7 @@ const showAllUsers = async (req, res) => {
  * Display the edit account form
  * Users can edit their own account, admins can edit any account
  */
-const showEditAccountForm = async (req, res) => {
+export const showEditAccountForm = async (req, res) => {
     const targetUserId = parseInt(req.params.id);
     const currentUser = req.session.user;
     const targetUser = await getUserById(targetUserId);
@@ -118,7 +117,7 @@ const showEditAccountForm = async (req, res) => {
 /**
  * Process account edit form submission
  */
-const processEditAccount = async (req, res) => {
+export const processEditAccount = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         errors.array().forEach(error => {
@@ -167,7 +166,7 @@ const processEditAccount = async (req, res) => {
  * Process account deletion
  * Only admins can delete accounts, and they cannot delete themselves
  */
-const processDeleteAccount = async (req, res) => {
+export const processDeleteAccount = async (req, res) => {
     const targetUserId = parseInt(req.params.id);
     const currentUser = req.session.user;
     // Only admins can delete accounts
@@ -193,28 +192,3 @@ const processDeleteAccount = async (req, res) => {
     }
     res.redirect('/register/list');
 };
-
-// --- 1. Static / Fixed Routes (Check these first) ---
-
-/** GET /register - Display the registration form */
-router.get('/', showRegistrationForm);
-
-/** POST /register - Handle registration submission */
-router.post('/', registrationValidation, processRegistration);
-
-/** GET /register/list - Display all registered users */
-router.get('/list', requireRole('admin'), showAllUsers); 
-
-
-// --- 2. Dynamic / Parameterized Routes (Check these last) ---
-
-/** GET /register/:id/edit - Display edit account form */
-router.get('/:id/edit', requireLogin, showEditAccountForm);
-
-/** POST /register/:id/edit - Process account edit */
-router.post('/:id/edit', requireLogin, updateAccountValidation, processEditAccount);
-
-/** POST /register/:id/delete - Delete user account */
-router.post('/:id/delete', requireLogin, processDeleteAccount);
-
-export default router;

@@ -100,7 +100,7 @@ export const createMaintenanceRequest = async (data) => {
         title, 
         description, 
         priority = 'medium', 
-        status = 'open' 
+        status = 'new' 
     } = data;
 
     const query = `
@@ -123,10 +123,41 @@ export const createMaintenanceRequest = async (data) => {
         const result = await db.query(query, values);
         const newOrderId = result.rows[0].id;
 
-        // Optionally return the full object by fetching it after creation
         return await getMaintenanceRequestById(newOrderId);
     } catch (error) {
         console.error("Error creating maintenance request:", error);
+        throw error;
+    }
+};
+
+export const getAvailableUnitsForUser = async (userId, role) => {
+    try {
+        if (role === 'admin' || role === 'manager') {
+            // ALL units for staff
+            const query = `
+                SELECT u.id, u.unit_number, p.name as property_name 
+                FROM units u
+                JOIN properties p ON u.property_id = p.id
+                ORDER BY p.name, u.unit_number;
+            `;
+            const result = await db.query(query);
+            return result.rows;
+            
+        } else {
+            // ONLY leased units for tenants (filtering for 'active' leases)
+            const query = `
+                SELECT u.id, u.unit_number, p.name as property_name 
+                FROM units u
+                JOIN properties p ON u.property_id = p.id
+                JOIN leases l ON u.id = l.unit_id
+                WHERE l.tenant_id = $1 AND l.status = 'active'
+                ORDER BY p.name, u.unit_number;
+            `;
+            const result = await db.query(query, [userId]);
+            return result.rows;
+        }
+    } catch (error) {
+        console.error("Error fetching available units for user:", error);
         throw error;
     }
 };
