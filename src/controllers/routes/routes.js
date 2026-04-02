@@ -8,6 +8,7 @@ import { processLogout } from '../forms/login.js';
 import { requireLogin } from '../../middleware/auth.js';
 import { dashboardPage } from '../dashboard/dashboard.js';
 import contactRoutes from '../forms/contact.js';
+import { cancelMaintenanceRequest } from '../maintenance/maintenance.js';
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.get('/properties', propertyListPage);
 router.get('/properties/:id', propertyDetailPage);
 router.use('/contact', contactRoutes);
 router.get('/dashboard', requireLogin, dashboardPage);
+router.post('/dashboard', cancelMaintenanceRequest);
 
 // Auth Routes
 router.use('/register', registrationRoutes);

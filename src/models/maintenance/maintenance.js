@@ -194,3 +194,30 @@ export const updateMaintenanceRequest = async (id, data) => {
         throw error;
     }
 };
+
+/**
+ * Cancels a maintenance work order by setting its status to 'cancelled'.
+ * @param {number|string} id - The ID of the work order.
+ */
+export const cancelMaintenanceRequest = async (id, requester_id) => {
+    const query = `
+        UPDATE work_orders 
+        SET status = 'cancelled'
+        WHERE id = $1 AND requester_id = $2 AND status NOT IN ('completed', 'cancelled')
+        RETURNING id, status;
+    `;
+
+    try {
+        const result = await db.query(query, [id, requester_id]);
+        
+        if (result.rows.length === 0) {
+            // Either the ID doesn't exist or it's already completed/cancelled
+            return null; 
+        }
+        
+        return result.rows[0];
+    } catch (error) {
+        console.error(`Error cancelling maintenance request ${id}:`, error);
+        throw error;
+    }
+};

@@ -3,7 +3,8 @@ import {
     getAllMaintenanceRequests,
     getMaintenanceRequestById,
     createMaintenanceRequest,
-    updateMaintenanceRequest
+    updateMaintenanceRequest,
+    cancelMaintenanceRequest as cancelMaintenanceRequestModel
 } from '../../models/maintenance/maintenance.js';
 import { getAvailableUnitsForUser } from '../../models/maintenance/maintenance.js';
 
@@ -147,11 +148,39 @@ const handleUpdateMaintenanceRequest = async (req, res, next) => {
     }
 };
 
+const handleCancelMaintenanceRequest = async (req, res, next) => {
+    try {
+        const { workOrderId } = req.body;
+        const requesterId = req.session.user ? req.session.user.id : null;
+        
+        if (!requesterId || !workOrderId) {
+            req.flash('error', 'Session expired or invalid request.');
+            return res.redirect('/dashboard');
+        }
+
+        // Call the model function to update status to 'cancelled'
+        const result = await cancelMaintenanceRequestModel(workOrderId, requesterId);
+
+        if (!result) {
+            req.flash('error', 'Could not cancel the request. It may already be completed or does not exist.');
+            return res.redirect('/dashboard'); 
+        }
+
+        req.flash('success', `Maintenance Request #${workOrderId} has been cancelled.`);
+        res.redirect('/dashboard'); 
+    } catch (error) {
+        console.error("Error in cancelMaintenanceRequest controller:", error);
+        req.flash('error', 'An error occurred while trying to cancel the request.');
+        res.redirect('/dashboard');
+    }
+};
+
 export { 
     maintenanceRequestPage, 
     maintenanceDetailPage, 
     createMaintananceRequestPage,
     handleCreateMaintenanceRequest,
     updateMaintenanceRequestPage,
-    handleUpdateMaintenanceRequest
+    handleUpdateMaintenanceRequest,
+    handleCancelMaintenanceRequest as cancelMaintenanceRequest
 };

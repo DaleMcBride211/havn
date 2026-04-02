@@ -108,7 +108,7 @@
                             <th>Status</th>
                             <th>Assigned Vendor</th>
                             <th>Date Filed</th>
-                        </tr>
+                            <th class="text-center">Actions</th> </tr>
                     </thead>
                     <tbody>
                         <% workOrders.forEach(order => { %>
@@ -130,6 +130,18 @@
                                 </td>
                                 <td><%= order.vendor_name || 'TBD' %></td>
                                 <td><%= new Date(order.created_at).toLocaleDateString() %></td>
+                                <td class="text-center">
+                                    <% if (order.status !== 'completed' && order.status !== 'cancelled') { %>
+                                        <form action="/dashboard" method="POST" onsubmit="return confirm('Are you sure you want to cancel this request?');">
+                                            <input type="hidden" name="workOrderId" value="<%= order.id %>">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                    <% } else { %>
+                                        <span class="text-muted small">-</span>
+                                    <% } %>
+                                </td>
                             </tr>
                         <% }) %>
                     </tbody>
