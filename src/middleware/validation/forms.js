@@ -87,32 +87,26 @@ const registrationValidation = [
 const updateAccountValidation = [
     body('firstName')
         .trim()
-        .isLength({ min: 2, max: 50 })
-        .withMessage('First name must be between 2 and 50 characters')
-        .matches(/^[a-zA-Z\s'-]+$/)
-        .withMessage('First name can only contain letters, spaces, hyphens, and apostrophes'),
+        .notEmpty().withMessage('First name is required')
+        .isLength({ min: 2, max: 50 }).withMessage('First name must be 2-50 characters')
+        .matches(/^[a-zA-Z\s'-]+$/).withMessage('First name contains invalid characters'),
     
     body('lastName')
         .trim()
-        .isLength({ min: 2, max: 50 })
-        .withMessage('Last name must be between 2 and 50 characters')
-        .matches(/^[a-zA-Z\s'-]+$/)
-        .withMessage('Last name can only contain letters, spaces, hyphens, and apostrophes'),
+        .notEmpty().withMessage('Last name is required')
+        .isLength({ min: 2, max: 50 }).withMessage('Last name must be 2-50 characters')
+        .matches(/^[a-zA-Z\s'-]+$/).withMessage('Last name contains invalid characters'),
 
     body('email')
         .trim()
-        .isEmail()
-        .normalizeEmail()
-        .withMessage('Must be a valid email address')
-        .isLength({ max: 255 })
-        .withMessage('Email address is too long'),
+        .isEmail().withMessage('Must be a valid email address')
+        .isLength({ max: 255 }).withMessage('Email address is too long')
+        .normalizeEmail(), 
 
     body('phone')
         .trim()
-        .notEmpty()
-        .withMessage('Phone number is required')
-        // Checks for a basic phone format (adjust regex based on your region)
-        .matches(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)
+        .notEmpty().withMessage('Phone number is required')
+        .matches(/^(\+?\d{1,3}[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/)
         .withMessage('Please enter a valid phone number')
 ];
 
