@@ -7,10 +7,21 @@
     </div>
 
     <form action="/contact" method="POST" class="contact-form">
-        <% if (typeof property !== 'undefined') { %>
-            <input type="hidden" name="property_id" value="<%= property.id %>">
+        
+        <% if (typeof property !== 'undefined' && property) { %>
+            <input type="hidden" name="propertyName" value="<%= property.name %>">
             <div class="property-notice">
                 <strong>Inquiring about:</strong> <%= property.name %>
+            </div>
+        <% } else if (typeof properties !== 'undefined' && properties.length > 0) { %>
+            <div class="form-group">
+                <label for="propertyName">Interested in a specific property?</label>
+                <select id="propertyName" name="propertyName">
+                    <option value="">-- Select a Property (Optional) --</option>
+                    <% properties.forEach(prop => { %>
+                        <option value="<%= prop.name %>"><%= prop.name %> (<%= prop.city %>)</option>
+                    <% }) %>
+                </select>
             </div>
         <% } %>
 

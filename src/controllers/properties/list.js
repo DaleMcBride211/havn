@@ -32,5 +32,17 @@ const propertyDetailPage = async (req, res, next) => {
     });
 };
 
+export const getAvailableProperties = async () => {
+    
+    const query = `
+        SELECT id, name 
+        FROM Properties 
+        WHERE status != 'available' 
+        ORDER BY name ASC
+    `;
+    const result = await db.query(query);
+    return result.rows;
+};
+
 
 export { propertyListPage, propertyDetailPage };

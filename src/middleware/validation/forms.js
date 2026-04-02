@@ -176,7 +176,7 @@ const contactValidation = [
   body('message')
     .trim()
     .notEmpty().withMessage('Message is required')
-    .isLength({ min: 10, max: 2000 })
+    .isLength({ min: 2, max: 2000 })
     .withMessage('Message must be between 10 and 2000 characters')
     .custom((value) => {
       // Your existing spam check logic

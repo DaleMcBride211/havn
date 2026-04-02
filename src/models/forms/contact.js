@@ -12,31 +12,24 @@ import db from '../db.js';
  * @param {number|null} data.property_id - Optional FK to Properties
  * @returns {Promise<Object>} The newly created inquiry record
  */
-const createContactForm = async ({ firstName, lastName, email, phone, subject, message, property_id }) => {
+const createContactForm = async (data) => {
     const query = `
         INSERT INTO Contact_Inquiries (
-            first_name, 
-            last_name, 
-            email, 
-            phone, 
-            subject, 
-            message, 
-            property_id, 
-            status
+            first_name, last_name, email, phone, subject, message, property_name
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, 'new')
-        RETURNING *
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *;
     `;
     const values = [
-        firstName, 
-        lastName, 
-        email, 
-        phone, 
-        subject, 
-        message, 
-        property_id || null
+        data.firstName, 
+        data.lastName, 
+        data.email, 
+        data.phone, 
+        data.subject, 
+        data.message, 
+        data.propertyName 
     ];
-
+    
     const result = await db.query(query, values);
     return result.rows[0];
 };
@@ -55,7 +48,7 @@ const getAllContacts = async () => {
             phone, 
             subject, 
             message, 
-            property_id, 
+            property_name, 
             status, 
             created_at
         FROM Contact_Inquiries
@@ -80,7 +73,7 @@ const getContactById = async (id) => {
             phone, 
             subject, 
             message, 
-            property_id, 
+            property_name, 
             status, 
             created_at
         FROM Contact_Inquiries

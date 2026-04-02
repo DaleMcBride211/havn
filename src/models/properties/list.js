@@ -84,6 +84,21 @@ const searchProperties = async (location) => {
     return result.rows.map(mapPropertyRow);
 };
 
+
+const getAvailableProperties = async () => {
+    const query = `
+        SELECT DISTINCT p.* FROM properties p
+        JOIN units u ON p.id = u.property_id
+        WHERE u.status IN ('vacant', 'listed')
+        ORDER BY p.name ASC
+    `;
+
+    const result = await db.query(query);
+    
+    // Transform rows using the existing mapper
+    return result.rows.map(mapPropertyRow);
+};
+
 /**
  * Clean wrappers for external use
  */
@@ -95,5 +110,6 @@ export {
     getPropertyByName, 
     getProperties, 
     searchProperties,
-    getProperty 
+    getProperty,
+    getAvailableProperties
 };
