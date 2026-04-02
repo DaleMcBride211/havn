@@ -2,9 +2,9 @@ import db from '../db.js';
 
 /**
  * Inserts a new inquiry into the Contact_Inquiries table.
- * * @param {Object} data - The inquiry data object
- * @param {string} data.first_name
- * @param {string} data.last_name
+ * @param {Object} data - The inquiry data object
+ * @param {string} data.firstName
+ * @param {string} data.lastName
  * @param {string} data.email
  * @param {string} data.phone
  * @param {string} data.subject
@@ -43,7 +43,7 @@ const createContactForm = async ({ firstName, lastName, email, phone, subject, m
 
 /**
  * Retrieves all inquiries from Contact_Inquiries, ordered by most recent.
- * * @returns {Promise<Array>} Array of inquiry records
+ * @returns {Promise<Array>} Array of inquiry records
  */
 const getAllContacts = async () => {
     const query = `
@@ -65,4 +65,45 @@ const getAllContacts = async () => {
     return result.rows;
 };
 
-export { createContactForm, getAllContacts };
+/**
+ * Retrieves a single inquiry by its ID.
+ * @param {number|string} id - The unique ID of the inquiry
+ * @returns {Promise<Object|null>} The inquiry record or null if not found
+ */
+const getContactById = async (id) => {
+    const query = `
+        SELECT 
+            id, 
+            first_name, 
+            last_name, 
+            email, 
+            phone, 
+            subject, 
+            message, 
+            property_id, 
+            status, 
+            created_at
+        FROM Contact_Inquiries
+        WHERE id = $1
+    `;
+    const result = await db.query(query, [id]);
+    return result.rows[0] || null;
+};
+
+const updateContactStatus = async (id, status) => {
+    const query = `
+        UPDATE Contact_Inquiries
+        SET status = $1
+        WHERE id = $2
+        RETURNING *
+    `;
+    const result = await db.query(query, [status, id]);
+    return result.rows[0];
+};
+
+export { 
+    createContactForm, 
+    getAllContacts, 
+    getContactById,
+    updateContactStatus
+};

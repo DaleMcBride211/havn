@@ -1,0 +1,208 @@
+/* --- contactDetail.css --- */
+
+/* 1. Layout & Container */
+.contact-detail-container {
+    max-width: 800px; /* Keep it narrow for readability */
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+    color: var(--primary);
+}
+
+/* 2. Badges */
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.status-new {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-resolved {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-archived {
+    background-color: #f5f5f5;
+    color: #616161;
+}
+
+/* 3. Inquiry Card */
+.inquiry-card {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+}
+
+.inquiry-header h2 {
+    margin: 0 0 5px 0;
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.timestamp {
+    margin: 0;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 25px 0;
+}
+
+/* 4. User Info Grid */
+.user-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 25px;
+}
+
+.info-group label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.info-group p {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--text);
+}
+
+.info-group a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.info-group a:hover {
+    text-decoration: underline;
+}
+
+/* 5. Message Body */
+.message-body label {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.message-content {
+    background-color: var(--bg); /* Uses your global light gray background */
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 6px;
+    white-space: pre-wrap; /* Crucial: Keeps the user's line breaks and paragraphs */
+    margin-top: 15px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text);
+}
+
+/* 6. Admin Controls & Form */
+.admin-controls {
+    background-color: var(--bg);
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.status-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.form-group select {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: var(--white);
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+}
+
+.form-group select:focus {
+    border-color: var(--accent);
+}
+
+.btn-save {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-save:hover {
+    background-color: var(--accent);
+}
+
+.btn-save:active {
+    transform: translateY(1px);
+}
+
+/* 7. Responsive Adjustments */
+@media (max-width: 600px) {
+    .inquiry-card {
+        padding: 20px;
+    }
+
+    .status-form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-save {
+        width: 100%;
+    }
+}

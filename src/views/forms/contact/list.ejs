@@ -17,7 +17,7 @@
                     <th>Subject</th>
                     <th>Property</th>
                     <th>Status</th>
-                </tr>
+                    <th>Action</th> </tr>
             </thead>
             <tbody>
                 <% if (contacts.length > 0) { %>
@@ -30,12 +30,7 @@
                                 <%= contact.first_name %> <%= contact.last_name %>
                             </td>
                             <td class="cell-email">
-                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<%= contact.email %>&su=Re: <%= contact.subject %>" 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                class="email-link">
                                     <%= contact.email %>
-                                </a>
                             </td>
                             <td class="cell-phone"><%= contact.phone %></td>
                             <td class="cell-subject"><%= contact.subject %></td>
@@ -45,11 +40,14 @@
                             <td class="cell-status">
                                 <span class="status-tag"><%= contact.status %></span>
                             </td>
+                            <td class="cell-action">
+                                <a href="/contact/responses/<%= contact.id %>" class="btn-detail">View Details</a>
+                            </td>
                         </tr>
                     <% }); %>
                 <% } else { %>
                     <tr>
-                        <td colspan="7" class="empty-row">No inquiries found.</td>
+                        <td colspan="8" class="empty-row">No inquiries found.</td>
                     </tr>
                 <% } %>
             </tbody>

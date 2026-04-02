@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 import { Router } from 'express';
-import { createContactForm, getAllContacts } from '../../models/forms/contact.js';
+import { createContactForm, getAllContacts, getContactById, updateContactStatus } from '../../models/forms/contact.js';
 import { contactValidation } from '../../middleware/validation/forms.js'; 
 
 const router = Router();
@@ -94,10 +94,54 @@ const contactListPage = async (req, res, next) => {
     }
 };
 
+const contactDetailPage = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const contact = await getContactById(id);
+
+        if (!contact) {
+            req.flash('error', 'Inquiry not found.');
+            return res.redirect('/contact/responses');
+        }
+
+        res.render('forms/contact/detail', {
+            title: `Inquiry #${id} - ${contact.subject}`,
+            stylesheet: 'contactDetail.css', // Suggested stylesheet name
+            contact
+        });
+    } catch (error) {
+        console.error('Error fetching contact detail:', error);
+        res.redirect('/contact/responses');
+    }
+};
+
+const handleStatusUpdate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        const updated = await updateContactStatus(id, status);
+
+        if (!updated) {
+            req.flash('error', 'Could not find the inquiry to update.');
+            return res.redirect('/contact/responses');
+        }
+
+        req.flash('success', `Inquiry #${id} marked as ${status}.`);
+        res.redirect(`/contact/responses/${id}`);
+    } catch (error) {
+        console.error('Error updating status:', error);
+        req.flash('error', 'Failed to update status.');
+        res.redirect('/contact/responses');
+    }
+};
+
 // Routes
 router.get('/', showContactForm);
 router.get('/success', showSuccessPage);
 router.post('/', contactValidation, processContactSubmission); 
 router.get('/responses', contactListPage);
+router.get('/responses/:id', contactDetailPage);
+router.post('/responses/:id', handleStatusUpdate);
 
 export default router;

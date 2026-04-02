@@ -1,0 +1,70 @@
+<%- include('../../partials/header') %>
+<main class="contact-detail-container">
+    <div class="header-actions">
+        <a href="/contact/responses" class="back-link">← Back to All Inquiries</a>
+        <span class="badge status-<%= contact.status %>"><%= contact.status.toUpperCase() %></span>
+    </div>
+
+    <section class="inquiry-card">
+        <div class="inquiry-header">
+            <h2><%= contact.subject %></h2>
+            <p class="timestamp">Received on: <%= new Date(contact.created_at).toLocaleString() %></p>
+        </div>
+
+        <div class="user-info-grid">
+            <div class="info-group">
+                <label>From</label>
+                <p><strong><%= contact.first_name %> <%= contact.last_name %></strong></p>
+            </div>
+            <div class="info-group">
+                <label>Email</label>
+                <p><a href="https://mail.google.com/mail/?view=cm&fs=1&to=<%= contact.email %>&su=Re: <%= contact.subject %>" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="email-link">
+                                    <%= contact.email %>
+                                </a></p>
+            </div>
+            <div class="info-group">
+                <label>Phone</label>
+                <p><%= contact.phone || 'Not provided' %></p>
+            </div>
+            <div class="info-group">
+                <label>Property ID</label>
+                <p>
+                    <% if (contact.property_id) { %>
+                        <a href="/properties/<%= contact.property_id %>">#<%= contact.property_id %> (View Property)</a>
+                    <% } else { %>
+                        General Inquiry
+                    <% } %>
+                </p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="message-body">
+            <label>Message</label>
+            <div class="message-content">
+                <%= contact.message %>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="admin-controls">
+            <form action="/contact/responses/<%= contact.id %>" method="POST" class="status-form">
+                <div class="form-group">
+                    <label for="status">Update Inquiry Status:</label>
+                    <select name="status" id="status">
+                        <option value="new" <%= contact.status === 'new' ? 'selected' : '' %>>New</option>
+                        <option value="contacted" <%= contact.status === 'contacted' ? 'selected' : '' %>>Contacted</option>
+                        <option value="closed" <%= contact.status === 'closed' ? 'selected' : '' %>>Closed</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </form>
+        </div>
+    </section>
+</main>
+<%- include('../../partials/footer') %>

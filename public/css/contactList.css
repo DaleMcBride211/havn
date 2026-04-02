@@ -123,6 +123,29 @@
     font-style: italic;
 }
 
+/* Action Button Styling */
+.btn-detail {
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.btn-detail:hover {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.btn-detail:active {
+    transform: translateY(1px);
+}
+
 /* --- RESPONSIVENESS --- */
 @media (max-width: 768px) {
     .contact-list-container {
