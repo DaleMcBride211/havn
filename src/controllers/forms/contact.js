@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 import { Router } from 'express';
-import { createContactForm } from '../../models/forms/contact.js';
+import { createContactForm, getAllContacts } from '../../models/forms/contact.js';
 import { contactValidation } from '../../middleware/validation/forms.js'; 
 
 const router = Router();
@@ -73,9 +73,31 @@ const showSuccessPage = (req, res) => {
     });
 };
 
+const contactListPage = async (req, res, next) => {
+    try {
+        const contacts = await getAllContacts();
+
+        
+        const contactData = contacts || [];
+
+        res.render('forms/contact/list', {
+            title: 'Contact Inquiries',
+            stylesheet: 'contactList.css', 
+            contacts: contactData
+        });
+
+    } catch (error) {
+        console.error('Error fetching contact list:', error);
+        
+        req.flash('error', 'Could not retrieve contact inquiries.');
+        res.redirect('/'); 
+    }
+};
+
 // Routes
 router.get('/', showContactForm);
 router.get('/success', showSuccessPage);
 router.post('/', contactValidation, processContactSubmission); 
+router.get('/responses', contactListPage);
 
 export default router;

@@ -1,0 +1,60 @@
+<%- include('../../partials/header') %>
+
+<main class="contact-list-container">
+    <div class="list-header">
+        <h1><%= title %></h1>
+        <div class="count-badge"><%= contacts.length %> Inquiries</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="contact-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Subject</th>
+                    <th>Property</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (contacts.length > 0) { %>
+                    <% contacts.forEach(contact => { %>
+                        <tr class="status-<%= contact.status %>">
+                            <td class="cell-date">
+                                <%= new Date(contact.created_at).toLocaleDateString() %>
+                            </td>
+                            <td class="cell-name">
+                                <%= contact.first_name %> <%= contact.last_name %>
+                            </td>
+                            <td class="cell-email">
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<%= contact.email %>&su=Re: <%= contact.subject %>" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="email-link">
+                                    <%= contact.email %>
+                                </a>
+                            </td>
+                            <td class="cell-phone"><%= contact.phone %></td>
+                            <td class="cell-subject"><%= contact.subject %></td>
+                            <td class="cell-property">
+                                <%= contact.property_id || 'N/A' %>
+                            </td>
+                            <td class="cell-status">
+                                <span class="status-tag"><%= contact.status %></span>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="7" class="empty-row">No inquiries found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<%- include('../../partials/footer') %>

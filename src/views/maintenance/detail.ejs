@@ -35,14 +35,14 @@
                 </div>
                 <div class="info-item">
                     <label>Apartment</label>
-                    <p class="text-main">Unit <%= specificRequest.details.unit %></p>
+                    <p class="text-main"><%= specificRequest.details.unit %></p>
                 </div>
                 <div class="info-item">
                     <label>Resident</label>
                     <p class="text-main"><%= specificRequest.details.tenantName %></p>
                 </div>
                 <div class="info-item">
-                    <label>Estimated Cost</label>
+                    <label>Cost</label>
                     <p class="text-main">$<%= specificRequest.cost.toFixed(2) %></p>
                 </div>
             </div>

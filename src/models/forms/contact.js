@@ -45,7 +45,7 @@ const createContactForm = async ({ firstName, lastName, email, phone, subject, m
  * Retrieves all inquiries from Contact_Inquiries, ordered by most recent.
  * * @returns {Promise<Array>} Array of inquiry records
  */
-const getAllContactForms = async () => {
+const getAllContacts = async () => {
     const query = `
         SELECT 
             id, 
@@ -65,4 +65,4 @@ const getAllContactForms = async () => {
     return result.rows;
 };
 
-export { createContactForm, getAllContactForms };
+export { createContactForm, getAllContacts };
