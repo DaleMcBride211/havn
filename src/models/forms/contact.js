@@ -1,32 +1,68 @@
 import db from '../db.js';
+
 /**
- * Inserts a new contact form submission into the database.
- * 
- * @param {string} subject - The subject of the contact message
- * @param {string} message - The message content
- * @returns {Promise<Object>} The newly created contact form record
+ * Inserts a new inquiry into the Contact_Inquiries table.
+ * * @param {Object} data - The inquiry data object
+ * @param {string} data.first_name
+ * @param {string} data.last_name
+ * @param {string} data.email
+ * @param {string} data.phone
+ * @param {string} data.subject
+ * @param {string} data.message
+ * @param {number|null} data.property_id - Optional FK to Properties
+ * @returns {Promise<Object>} The newly created inquiry record
  */
-const createContactForm = async (subject, message) => {
+const createContactForm = async ({ firstName, lastName, email, phone, subject, message, property_id }) => {
     const query = `
-        INSERT INTO contact_form (subject, message)
-        VALUES ($1, $2)
+        INSERT INTO Contact_Inquiries (
+            first_name, 
+            last_name, 
+            email, 
+            phone, 
+            subject, 
+            message, 
+            property_id, 
+            status
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, 'new')
         RETURNING *
     `;
-    const result = await db.query(query, [subject, message]);
+    const values = [
+        firstName, 
+        lastName, 
+        email, 
+        phone, 
+        subject, 
+        message, 
+        property_id || null
+    ];
+
+    const result = await db.query(query, values);
     return result.rows[0];
 };
+
 /**
- * Retrieves all contact form submissions, ordered by most recent first.
- * 
- * @returns {Promise<Array>} Array of contact form records
+ * Retrieves all inquiries from Contact_Inquiries, ordered by most recent.
+ * * @returns {Promise<Array>} Array of inquiry records
  */
 const getAllContactForms = async () => {
     const query = `
-        SELECT id, subject, message, submitted
-        FROM contact_form
-        ORDER BY submitted DESC
+        SELECT 
+            id, 
+            first_name, 
+            last_name, 
+            email, 
+            phone, 
+            subject, 
+            message, 
+            property_id, 
+            status, 
+            created_at
+        FROM Contact_Inquiries
+        ORDER BY created_at DESC
     `;
     const result = await db.query(query);
     return result.rows;
 };
+
 export { createContactForm, getAllContactForms };

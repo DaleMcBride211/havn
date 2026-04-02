@@ -1,28 +1,5 @@
 import { body } from 'express-validator';
 
-const contactValidation = [
-  body('subject')
-    .trim()
-    .isLength({ min: 2, max: 255 })
-    .withMessage('Subject must be between 2 and 255 characters')
-    .matches(/^[a-zA-Z0-9\s\-.,!?]+$/)
-    .withMessage('Subject contains invalid characters'),
-  body('message')
-    .trim()
-    .isLength({ min: 10, max: 2000 })
-    .withMessage('Message must be between 10 and 2000 characters')
-    .custom((value) => {
-      // Check for spam patterns (excessive repetition)
-      const words = value.split(/\s+/);
-      const uniqueWords = new Set(words);
-      if (words.length > 20 && uniqueWords.size / words.length < 0.3) {
-        throw new Error('Message appears to be spam');
-      }
-      return true;
-    })
-];
-
-
 // utilities/forms.js (Add this to your existing content)
 const loginValidation = [
     body('email')
@@ -166,6 +143,55 @@ const maintenanceCreateValidation = [
     .withMessage('Description must be between 10 and 2000 characters')
 ];
 
+
+const contactValidation = [
+  body('firstName')
+    .trim()
+    .notEmpty().withMessage('First name is required')
+    .isLength({ min: 2, max: 50 }).withMessage('First name must be 2-50 characters')
+    .matches(/^[a-zA-Z\s'-]+$/).withMessage('First name contains invalid characters'),
+
+  body('lastName')
+    .trim()
+    .notEmpty().withMessage('Last name is required')
+    .isLength({ min: 2, max: 50 }).withMessage('Last name must be 2-50 characters')
+    .matches(/^[a-zA-Z\s'-]+$/).withMessage('Last name contains invalid characters'),
+
+  body('email')
+    .trim()
+    .isEmail().withMessage('Please provide a valid email address')
+    .normalizeEmail(),
+
+  body('phone')
+    .optional({ checkFalsy: true })
+    .matches(/^(\+?\d{1,3}[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}$/)
+    .withMessage('Please enter a valid phone number'),
+
+  body('subject')
+    .trim()
+    .notEmpty().withMessage('Please select a subject')
+    .isIn(['General Inquiry', 'Leasing', 'Maintenance', 'Management'])
+    .withMessage('Invalid subject selected'),
+
+  body('message')
+    .trim()
+    .notEmpty().withMessage('Message is required')
+    .isLength({ min: 10, max: 2000 })
+    .withMessage('Message must be between 10 and 2000 characters')
+    .custom((value) => {
+      // Your existing spam check logic
+      const words = value.split(/\s+/);
+      const uniqueWords = new Set(words);
+      if (words.length > 20 && uniqueWords.size / words.length < 0.3) {
+        throw new Error('Message appears to be spam');
+      }
+      return true;
+    }),
+    
+  body('property_id')
+    .optional({ checkFalsy: true })
+    .isInt().withMessage('Invalid property reference')
+];
 
 export { 
     contactValidation, 

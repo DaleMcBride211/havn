@@ -7,6 +7,7 @@ import maintenanceRoutes from './maintenanceRoutes.js'; // Import the new file
 import { processLogout } from '../forms/login.js';
 import { requireLogin } from '../../middleware/auth.js';
 import { dashboardPage } from '../dashboard/dashboard.js';
+import contactRoutes from '../forms/contact.js';
 
 const router = Router();
 
@@ -15,6 +16,7 @@ router.get('/', homePage);
 router.get('/about', aboutPage);
 router.get('/properties', propertyListPage);
 router.get('/properties/:id', propertyDetailPage);
+router.use('/contact', contactRoutes);
 router.get('/dashboard', requireLogin, dashboardPage);
 
 // Auth Routes
