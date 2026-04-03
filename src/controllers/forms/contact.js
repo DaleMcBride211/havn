@@ -37,6 +37,7 @@ const showContactForm = async (req, res) => {
  * Process contact form submission.
  */
 const processContactSubmission = async (req, res) => {
+    // 1. Validate inputs (assuming you'll add express-validator middleware)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         errors.array().forEach(error => req.flash('error', error.msg));
@@ -44,7 +45,7 @@ const processContactSubmission = async (req, res) => {
     }
 
     try {
-        // 2. Extract data (note: propertyName instead of property_id)
+        // 2. Extract data from req.body (matches your EJS name attributes)
         const { 
             firstName, 
             lastName, 
@@ -52,10 +53,10 @@ const processContactSubmission = async (req, res) => {
             phone, 
             subject, 
             message, 
-            propertyName // This is now a string (e.g., "Havn Heights")
+            property_id 
         } = req.body;
 
-        // 3. Save to database
+        // 3. Save to database using the model function
         await createContactForm({
             firstName,
             lastName,
@@ -63,13 +64,14 @@ const processContactSubmission = async (req, res) => {
             phone,
             subject,
             message,
-            // Pass the string directly. If empty, it stays null.
-            propertyName: propertyName || null 
+            property_id: property_id ? parseInt(property_id) : null
         });
 
-        console.log(`New inquiry received regarding: ${propertyName || 'General'}`);
+        // 4. Success handling
+        console.log(`New inquiry received from: ${email}`);
         req.flash('success', 'Thank you! Your message has been sent to the Havn team.');
         
+        // Redirect to a success page or back to form
         return res.redirect('/contact/success'); 
 
     } catch (error) {
