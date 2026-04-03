@@ -111,6 +111,7 @@ export const showEditAccountForm = async (req, res) => {
     res.render('forms/registration/edit', {
         title: 'Edit Account',
         user: targetUser,
+        currentUser: currentUser,
         stylesheet: 'editaccount.css'
     });
 };
@@ -119,17 +120,8 @@ export const showEditAccountForm = async (req, res) => {
  */
 export const processEditAccount = async (req, res) => {
     const targetUserId = parseInt(req.params.id);
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        errors.array().forEach(error => req.flash('error', error.msg));
-        return res.redirect(`/register/${targetUserId}/edit`);
-    }
-
     const currentUser = req.session.user;
-
-    // 1. FIX: Destructure the correct fields sent by the form
-    const { firstName, lastName, email, phone } = req.body;
+    const { firstName, lastName, email, phone, role } = req.body;
 
     try {
         const targetUser = await getUserById(targetUserId);
@@ -138,34 +130,40 @@ export const processEditAccount = async (req, res) => {
             return res.redirect('/register/list');
         }
 
-        // Check permissions
         const canEdit = currentUser.id === targetUserId || currentUser.role === 'admin';
         if (!canEdit) {
             req.flash('error', `You do not have permission to edit this account.`);
             return res.redirect('/register/list');
         }
 
-        // Check if new email already exists
-        const emailTaken = await emailExists(email);
-        if (emailTaken && targetUser.email !== email) {
-            req.flash('error', 'An account with this email already exists.');
-            return res.redirect(`/register/${targetUserId}/edit`);
+        const updateData = { firstName, lastName, email, phone };
+
+       if (currentUser.role === 'admin' && role) {
+            updateData.role = role;
+        } else {
+            updateData.role = targetUser.role;
         }
 
-        // 2. FIX: Pass the data as an OBJECT to match what updateUser expects
-        const updateData = { firstName, lastName, email, phone };
         await updateUser(targetUserId, updateData);
 
-        // 3. FIX: If user edited their own account, update session with correct keys
+        // Update session if user edited themselves
         if (currentUser.id === targetUserId) {
-            req.session.user.first_name = firstName;
-            req.session.user.last_name = lastName;
-            req.session.user.email = email;
-            req.session.user.phone = phone;
+            req.session.user = { 
+                ...req.session.user, 
+                first_name: firstName, 
+                last_name: lastName, 
+                email, 
+                phone,
+                role: updateData.role 
+            };
         }
 
         req.flash('success', 'Account updated successfully.');
-        res.redirect('/register/list');
+        if (currentUser.role === 'admin') {
+            res.redirect('/register/list');
+        } else {
+            res.redirect('/dashboard');
+        }
     } catch (error) {
         console.error('Error updating account:', error);
         req.flash('error', 'An error occurred while updating the account.');

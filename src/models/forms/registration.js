@@ -49,7 +49,7 @@ const getAllUsers = async () => {
  */
 const getUserById = async (id) => {
     const query = `
-        SELECT id, first_name, last_name, email, phone, role, created_at
+        SELECT id, first_name, last_name, email, role, phone, role, created_at
         FROM users
         WHERE id = $1 AND deleted_at IS NULL
     `;
@@ -62,14 +62,20 @@ const getUserById = async (id) => {
  * Updated to accept an object for consistency.
  */
 const updateUser = async (id, updateData) => {
-    const { firstName, lastName, email, phone } = updateData;
+    const { firstName, lastName, email, phone, role } = updateData;
     const query = `
         UPDATE users 
-        SET first_name = $1, last_name = $2, email = $3, phone = $4, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $5 AND deleted_at IS NULL
-        RETURNING id, first_name, last_name, email, updated_at
+        SET first_name = $1, 
+            last_name = $2, 
+            email = $3, 
+            phone = $4, 
+            role = $5, 
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = $6 AND deleted_at IS NULL 
+        RETURNING id, first_name, last_name, email, role, updated_at
     `;
-    const result = await db.query(query, [firstName, lastName, email, phone, id]);
+    // Pass 6 arguments to match the query above
+    const result = await db.query(query, [firstName, lastName, email, phone, role, id]);
     return result.rows[0] || null;
 };
 

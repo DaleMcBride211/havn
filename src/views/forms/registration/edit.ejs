@@ -24,6 +24,21 @@
             <input type="tel" id="phone" name="phone" value="<%= user.phone %>" required>
         </div>
 
+        <% /* Only display the role dropdown if the logged-in user is an admin */ %>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+            <div class="form-group">
+                <label for="role">User Role:</label>
+                <select id="role" name="role" class="form-control" required>
+                    <option value="tenant" <%= user.role === 'tenant' ? 'selected' : '' %>>Tenant</option>
+                    <option value="manager" <%= user.role === 'manager' ? 'selected' : '' %>>Manager</option>
+                    <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                </select>
+            </div>
+        <% } else { %>
+            <% /* Optional: include a hidden input so the current role isn't lost if your backend expects it */ %>
+            <input type="hidden" name="role" value="<%= user.role %>">
+        <% } %>
+
         <div class="form-actions">
             <button type="submit" class="btn-submit">Update Account</button>
             <a href="/register/list" class="btn-cancel">Cancel</a>
