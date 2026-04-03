@@ -110,25 +110,11 @@ const createProperty = async (propertyData) => {
 
         const { 
             name, address, city, state, zip, type, amenities, 
+            // House single-unit fields
             bedrooms, bathrooms, sq_ft, market_rent,
+            // Apartment multi-unit fields (These might be Arrays OR Strings depending on if 1 or 5 rows were submitted)
             multi_unit_number, multi_bedrooms, multi_bathrooms, multi_sq_ft, multi_market_rent
         } = propertyData;
-
-        // --- NEW: AMENITIES FORMATTING ---
-        // 1. Force the incoming data into an array (handles 0, 1, or multiple checkboxes)
-        const toArray = (val) => {
-            if (!val) return [];
-            return Array.isArray(val) ? val : [val];
-        };
-
-        // 2. Turn ["Pool", "Gym"] into {"Pool": true, "Gym": true}
-        const amenitiesObj = toArray(amenities).reduce((acc, item) => {
-            acc[item] = true;
-            return acc;
-        }, {});
-
-        const formattedAmenities = JSON.stringify(amenitiesObj);
-        // ---------------------------------
 
         // 1. Insert into Properties Table
         const propQuery = `
@@ -136,7 +122,7 @@ const createProperty = async (propertyData) => {
             VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *;
         `;
-        
+        const formattedAmenities = amenities ? JSON.stringify(amenities) : '{}';
         const propResult = await client.query(propQuery, [name, address, city, state, zip, type, formattedAmenities]);
         const newPropertyRow = propResult.rows[0];
 
@@ -151,6 +137,10 @@ const createProperty = async (propertyData) => {
         // 2b. Handle Multi-Family Apartment Building
         else if (type === 'apartment_building' && multi_unit_number) {
             
+            // Helper function: If only 1 unit row was submitted, req.body makes it a String. 
+            // If multiple were submitted, it's an Array. This forces everything into an Array so we can safely loop it.
+            const toArray = (val) => Array.isArray(val) ? val : [val];
+            
             const unitNumbers = toArray(multi_unit_number);
             const beds = toArray(multi_bedrooms);
             const baths = toArray(multi_bathrooms);
@@ -162,6 +152,7 @@ const createProperty = async (propertyData) => {
                 VALUES ($1, $2, $3, $4, $5, $6, 'vacant');
             `;
 
+            // Loop through the arrays and insert each unit individually
             for (let i = 0; i < unitNumbers.length; i++) {
                 await client.query(unitQuery, [
                     newPropertyRow.id,

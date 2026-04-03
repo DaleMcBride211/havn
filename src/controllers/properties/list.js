@@ -1,4 +1,5 @@
 import { getProperties, getPropertyById, createProperty } from '../../models/properties/list.js';
+import { createApplication } from '../../models/application/submit.js';
 
 const propertyListPage = async (req, res) => {
 
@@ -15,21 +16,27 @@ const propertyListPage = async (req, res) => {
 
 const propertyDetailPage = async (req, res, next) => {
     const propertyId = req.params.id;
+    const currentUser = req.session.user; // Pass the user session
 
-    const specificProperty = await getPropertyById(propertyId);
-    console.log('Specific Property', specificProperty);
+    try {
+        const specificProperty = await getPropertyById(propertyId);
 
-    if (!propertyId) {
-        const err = new Error(`Property id ${propertyId} not found`);
-        err.status = 404;
-        return next(err)
+        if (!specificProperty) {
+            const err = new Error(`Property id ${propertyId} not found`);
+            err.status = 404;
+            return next(err);
+        }
+
+        res.render('properties/detail', {
+            title: specificProperty.name,
+            stylesheet: 'propertyDetail.css',
+            specificProperty,
+            currentUser, // Now available in EJS
+            messages: req.flash() // If using connect-flash
+        });
+    } catch (error) {
+        next(error);
     }
-
-    res.render('properties/detail', {
-        title: specificProperty.name,
-        stylesheet: 'propertyDetail.css',
-        specificProperty
-    });
 };
 
 const newPropertyPage = async (req, res) => {
@@ -63,6 +70,37 @@ const submitNewProperty = async (req, res, next) => {
     }
 };
 
+const submitApplication = async (req, res, next) => {
+    try {
+        const { propertyId, unitId } = req.params;
+        
+        // Ensure user is logged in
+        if (!req.session.user) {
+            req.flash('error', 'You must be logged in to apply.');
+            return res.redirect('/login');
+        }
+
+        const applicantId = req.session.user.id;
+
+        // 1. Create the application record 
+        // (You'll need to create this function in your models/applications/list.js)
+        await createApplication({
+            applicant_id: applicantId,
+            unit_id: unitId,
+            status: 'pending'
+        });
+
+        // 2. Success feedback
+        req.flash('success', 'Application submitted! A manager will review it shortly.');
+        res.redirect(`/properties/${propertyId}`);
+
+    } catch (error) {
+        console.error('Error submitting application:', error);
+        req.flash('error', 'Failed to submit application. Please try again.');
+        res.redirect('back'); // Sends them back to the property detail page
+    }
+};
+
 
 
 const getAvailableProperties = async () => {
@@ -78,4 +116,4 @@ const getAvailableProperties = async () => {
 };
 
 
-export { propertyListPage, propertyDetailPage, getAvailableProperties, submitNewProperty, newPropertyPage };
+export { propertyListPage, propertyDetailPage, getAvailableProperties, submitNewProperty, newPropertyPage, submitApplication };
