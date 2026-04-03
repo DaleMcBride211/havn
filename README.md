@@ -1,40 +1,53 @@
-# Havn | Property Management System
+# Havn Property Management
 
 ## 1. Project Description
-**Havn** is a server-side rendered web application designed to streamline the relationship between property owners, managers, and tenants. The platform allows property owners to list and manage residential units, while providing tenants with a secure portal to view their lease details and manage maintenance requests. This project demonstrates backend principles including MVC architecture, session-based authentication, and relational database management.
-
-## 2. Database Schema
-*Note: The ERD above was exported from pgAdmin and illustrates the relationships between Users, Properties, Units, Leases, and Maintenance Requests[cite: 90].*
-
-
-
-## 3. User Roles
-The system utilizes three distinct roles to manage access and permissions[cite: 26, 91]:
-
-* **Admin (Owner):** Has full control over the system, including the ability to add or delete properties, manage all user accounts, and view site-wide operational data.
-* **Manager (Secondary Role):** Responsible for day-to-day operations, such as updating property availability and managing the maintenance workflow.
-* **Tenant (Standard User):** Access is limited to their own personal data, where they can view their lease and submit/track maintenance requests.
-
-## 4. Test Account Credentials
-To test the different permission levels of the application, please use the following accounts. 
-
-| Role | Email/Username | Password |
-| :--- | :--- | :--- |
-| **Admin** | admin@havn.com | `P@$$w0rd!` |
-| **Manager** | manager@havn.com | `P@$$w0rd!` |
-| **Tenant** | tenant@havn.com | `P@$$w0rd!` |
-
-*Note: All accounts use the same required testing password.*
-
-## 5. Known Limitations
-
+**Havn** is a comprehensive property management platform designed to streamline the relationship between property owners and their residents. The application serves two primary purposes:
+* **For Havn Management:** To provide a centralized dashboard for tracking maintenance requests, managing communication with prospective tenants, and overseeing user accounts.
+* **For Tenants:** To offer a self-service portal where they can manage their rental experience, view lease details, and maintain their personal profiles.
 
 ---
 
-### Technical Stack
-* **Backend:** Node.js with Express.js 
-* **Module System:** ECMAScript Modules (ESM) 
-* **Database:** PostgreSQL 
-* **Templating:** EJS or Liquid.js 
-* **Authentication:** Session-based with `express-session` and `bcrypt` 
-* **Deployment:** Render 
+## 2. Database Schema
+Below is the Entity Relationship Diagram (ERD) representing the database structure, including tables for users, properties, maintenance logs, and messages.
+
+![Havn Entity Relation Diagram](./path-to-your-image/erd.png)
+*Note: Please ensure your exported pgAdmin image is saved in the repository and the path above is updated accordingly.*
+
+---
+
+## 3. User Roles
+The system utilizes three distinct roles to manage permissions and access:
+
+### **Tenant**
+* **Lease Management:** View current lease agreements and related documents.
+* **Maintenance:** Create new maintenance requests and cancel existing ones if they are no longer needed.
+* **Public Access:** Access and submit general contact forms without needing to be logged in.
+* **Profile Management:** Edit and update personal profile information once authenticated.
+
+### **Manager**
+* **Maintenance Oversight:** View all submitted maintenance requests across the platform and update their status through various stages of completion.
+* **Inquiry Management:** Access and respond to messages sent via the public contact forms from prospective tenants.
+
+### **Admin**
+* **Full Access:** Includes all permissions granted to both Tenants and Managers.
+* **User Administration:** View and edit all user accounts within the system.
+* **Residency Approval:** Review, approve, or deny applications/requests to live at managed properties.
+
+---
+
+## 4. Test Account Credentials
+To test the various permission levels of the application, please use the following accounts. 
+
+**Note:** For security purposes, the specific password is not listed here, though a universal password has been applied to all test accounts for grading purposes.
+
+| Role    | Email Address           |
+| :---    | :---                    |
+| Admin   | dlmcburrito@gmail.com   |
+| Manager | manager1@propco.com     |
+| Tenant  | lukehill@gmail.com      |
+
+---
+
+## 5. Known Limitations
+* **CSS Loading Issue:** There is a known intermittent bug where CSS styles may fail to load on the initial page render. This is currently linked to database connection issues.
+* **Workaround:** If the site appears unstyled, a simple page refresh typically resolves the issue and loads the stylesheets correctly. This behavior emerged following the database issues.
