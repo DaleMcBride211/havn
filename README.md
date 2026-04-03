@@ -10,7 +10,7 @@
 ## 2. Database Schema
 Below is the Entity Relationship Diagram (ERD) representing the database structure, including tables for users, properties, maintenance logs, and messages.
 
-![Havn Entity Relation Diagram](./path-to-your-image/erd.png)
+![Havn Entity Relation Diagram](./public/images/havnerd.png)
 *Note: Please ensure your exported pgAdmin image is saved in the repository and the path above is updated accordingly.*
 
 ---
