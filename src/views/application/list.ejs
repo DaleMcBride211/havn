@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+
+<main class="admin-container">
+    <div class="page-header">
+        <h1>Rental Applications</h1>
+        <p>Review and manage incoming residency requests from prospective tenants.</p>
+    </div>
+
+    <% if (applications && applications.length > 0) { %>
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Applicant</th>
+                        <th>Property & Unit</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% applications.forEach(app => { %>
+                        <tr>
+                            <td data-label="Date">
+                                <%= new Date(app.submitted_at).toLocaleDateString() %>
+                            </td>
+                            <td data-label="Applicant">
+                                <div class="applicant-info">
+                                    <strong><%= app.first_name %> <%= app.last_name %></strong>
+                                    <span class="applicant-email"><%= app.applicant_email %></span>
+                                </div>
+                            </td>
+                            <td data-label="Property & Unit">
+                                <strong><%= app.property_name %></strong><br>
+                                Unit: <%= app.unit_number %>
+                            </td>
+                            <td data-label="Status">
+                                <span class="status-badge status-<%= app.application_status.toLowerCase() %>">
+                                    <%= app.application_status.toUpperCase() %>
+                                </span>
+                            </td>
+                            <td class="action-cell">
+                                <div class="action-group">
+                                    <% if (app.application_status === 'pending') { %>
+                                        <a href="/admin/applications/approve/<%= app.application_id %>" 
+                                        class="btn-action btn-approve" 
+                                        onclick="return confirm('Confirm approval for <%= app.first_name %>?')">
+                                        Approve
+                                        </a>
+                                        
+                                        <a href="/admin/applications/reject/<%= app.application_id %>" 
+                                        class="btn-action btn-reject"
+                                        onclick="return confirm('Are you sure you want to reject this application?')">
+                                        Reject
+                                        </a>
+                                    <% } else { %>
+                                        <span class="action-completed">Processed</span>
+                                    <% } %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <div class="empty-state">
+            <p>No applications currently on file.</p>
+        </div>
+    <% } %>
+</main>
+
+<%- include('../partials/footer') %>

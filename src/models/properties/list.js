@@ -177,6 +177,21 @@ const createProperty = async (propertyData) => {
 };
 
 /**
+ * Checks if a user has any pending or approved applications.
+ * @param {number} userId 
+ */
+const hasActiveApplication = async (userId) => {
+    const query = `
+        SELECT id FROM Applications 
+        WHERE applicant_id = $1 
+        AND status IN ('pending', 'under_review', 'approved')
+        LIMIT 1;
+    `;
+    const result = await db.query(query, [userId]);
+    return result.rows.length > 0;
+};
+
+/**
  * Clean wrappers for external use
  */
 const getPropertyById = (id) => getProperty(id, 'id');
@@ -189,5 +204,6 @@ export {
     searchProperties,
     getProperty,
     getAvailableProperties,
-    createProperty
+    createProperty,
+    hasActiveApplication
 };

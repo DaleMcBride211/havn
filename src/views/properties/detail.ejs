@@ -58,11 +58,15 @@
                                     </span>
 
                                     <% if (unit.status.toLowerCase() === 'vacant') { %>
-                                        <a href="/apply/<%= specificProperty.id %>/<%= unit.id %>" 
-                                        class="btn-apply"
-                                        onclick="return confirm('Are you sure you want to apply for Unit <%= unit.unit_number %>? This will send a formal request to the property manager.')">
-                                            Apply to Live Here
-                                        </a>
+                                        <% if (locals.alreadyApplied) { %>
+                                            <span class="text-muted"></span>
+                                        <% } else { %>
+                                            <a href="/apply/<%= specificProperty.id %>/<%= unit.id %>" 
+                                            class="btn-apply"
+                                            onclick="return confirm('Are you sure?')">
+                                                Apply to Live Here
+                                            </a>
+                                        <% } %>
                                     <% } %>
                                 </td>
                             </tr>

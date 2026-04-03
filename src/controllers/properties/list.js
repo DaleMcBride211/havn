@@ -1,4 +1,4 @@
-import { getProperties, getPropertyById, createProperty } from '../../models/properties/list.js';
+import { getProperties, getPropertyById, createProperty, hasActiveApplication } from '../../models/properties/list.js';
 import { createApplication } from '../../models/application/submit.js';
 
 const propertyListPage = async (req, res) => {
@@ -19,6 +19,7 @@ const propertyDetailPage = async (req, res, next) => {
     const currentUser = req.session.user; // Pass the user session
 
     try {
+        const hasApplied = await hasActiveApplication(currentUser.id);
         const specificProperty = await getPropertyById(propertyId);
 
         if (!specificProperty) {
@@ -30,6 +31,7 @@ const propertyDetailPage = async (req, res, next) => {
         res.render('properties/detail', {
             title: specificProperty.name,
             stylesheet: 'propertyDetail.css',
+            alreadyApplied: hasApplied,
             specificProperty,
             currentUser, // Now available in EJS
             messages: req.flash() // If using connect-flash
@@ -73,31 +75,30 @@ const submitNewProperty = async (req, res, next) => {
 const submitApplication = async (req, res, next) => {
     try {
         const { propertyId, unitId } = req.params;
-        
-        // Ensure user is logged in
-        if (!req.session.user) {
-            req.flash('error', 'You must be logged in to apply.');
-            return res.redirect('/login');
+        const userId = req.session.user.id;
+
+        // 1. NEW CHECK: See if they already have an open application
+        const alreadyApplied = await hasActiveApplication(userId);
+
+        if (alreadyApplied) {
+            req.flash('error', 'You already have an active application. You cannot apply for multiple units at once.');
+            return res.redirect(`/properties/${propertyId}`);
         }
 
-        const applicantId = req.session.user.id;
-
-        // 1. Create the application record 
-        // (You'll need to create this function in your models/applications/list.js)
+        // 2. Existing logic to create the application
         await createApplication({
-            applicant_id: applicantId,
+            applicant_id: userId,
             unit_id: unitId,
             status: 'pending'
         });
 
-        // 2. Success feedback
         req.flash('success', 'Application submitted! A manager will review it shortly.');
         res.redirect(`/properties/${propertyId}`);
 
     } catch (error) {
         console.error('Error submitting application:', error);
-        req.flash('error', 'Failed to submit application. Please try again.');
-        res.redirect('back'); // Sends them back to the property detail page
+        req.flash('error', 'Failed to submit application.');
+        res.redirect('back');
     }
 };
 

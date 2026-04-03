@@ -37,6 +37,32 @@ const createApplication = async (data) => {
     }
 };
 
+/**
+ * Fetches all applications with associated user, unit, and property details.
+ */
+const getAllApplications = async () => {
+    const query = `
+        SELECT 
+            a.id AS application_id,
+            a.status AS application_status,
+            a.submitted_at,
+            u.first_name, 
+            u.last_name, 
+            u.email AS applicant_email,
+            un.unit_number,
+            p.name AS property_name
+        FROM Applications a
+        JOIN Users u ON a.applicant_id = u.id
+        JOIN Units un ON a.unit_id = un.id
+        JOIN Properties p ON un.property_id = p.id
+        ORDER BY a.submitted_at DESC;
+    `;
+
+    const result = await db.query(query);
+    return result.rows;
+};
+
 export {
-    createApplication
+    createApplication,
+    getAllApplications
 };

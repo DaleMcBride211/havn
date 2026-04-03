@@ -10,6 +10,7 @@ import { dashboardPage } from '../dashboard/dashboard.js';
 import contactRoutes from '../forms/contact.js';
 import { cancelMaintenanceRequest } from '../maintenance/maintenance.js';
 import { propertyCreateValidation } from '../../middleware/validation/forms.js';
+import { adminApplicationsPage } from '../application/list.js';
 
 const router = Router();
 
@@ -17,6 +18,7 @@ const router = Router();
 router.get('/', homePage);
 router.get('/about', aboutPage);
 router.get('/apply/:propertyId/:unitId', requireLogin, submitApplication);
+router.get('/applications', adminApplicationsPage);
 router.get('/properties', propertyListPage);
 router.get('/properties/new', requireRole('admin'), newPropertyPage);
 router.post('/properties/new', requireRole('admin'), propertyCreateValidation, submitNewProperty);
