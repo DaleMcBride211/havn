@@ -1,95 +1,115 @@
-/* --- 7. FORM & EDIT PAGE STYLES --- */
-main {
-    max-width: 600px;
+/* --- 7. EDIT ACCOUNT PAGE STYLES --- */
+
+/* Center the form container on the page */
+.form-container {
+    max-width: 500px;
     margin: 40px auto;
-    padding: 0 20px;
+    padding: 2rem;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
 }
 
-h1 {
+.form-container h1 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
     color: var(--primary);
-    margin-bottom: 2rem;
     text-align: center;
 }
 
-form {
-    background: var(--white);
-    padding: 2.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+/* Form Group Layout */
+.form-group {
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
 }
 
-form div {
-    margin-bottom: 1.5rem;
-}
-
-label {
-    display: block;
+.form-group label {
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--primary);
     font-size: 0.9rem;
+    color: #555;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="tel"] {
-    width: 100%;
-    padding: 12px;
-    border: 1.5px solid var(--border);
+/* Input & Select Styling */
+.form-group input,
+.form-group select {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
     font-family: inherit;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
 }
 
-/* Button Container */
-button[type="submit"] {
-    background: var(--primary);
+/* Action Buttons Container */
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+/* Submit Button styling */
+.btn-submit {
+    background-color: var(--primary);
     color: var(--white);
     padding: 12px 24px;
     border: none;
     border-radius: 4px;
     font-weight: 600;
-    font-size: 1rem;
     cursor: pointer;
+    flex: 2; /* Makes the submit button slightly wider than cancel */
     transition: background 0.2s;
-    width: 100%; /* Full width on mobile */
 }
 
-button[type="submit"]:hover {
-    background: var(--accent);
+.btn-submit:hover {
+    background-color: var(--accent);
 }
 
-form a {
-    display: block;
-    text-align: center;
-    margin-top: 1rem;
-    color: #7f8c8d;
+/* Cancel Link styling */
+.btn-cancel {
     text-decoration: none;
+    color: #7f8c8d;
+    font-weight: 500;
     font-size: 0.9rem;
+    flex: 1;
+    text-align: center;
+    transition: color 0.2s;
 }
 
-form a:hover {
+.btn-cancel:hover {
+    color: var(--primary);
     text-decoration: underline;
 }
 
-/* Tablet/Desktop Button layout */
-@media (min-width: 480px) {
-    button[type="submit"] {
-        width: auto;
-        min-width: 150px;
+/* Mobile Adjustments for Form */
+@media (max-width: 480px) {
+    .form-container {
+        margin: 20px;
+        padding: 1.5rem;
     }
     
-    form a {
-        display: inline-block;
-        margin-top: 0;
-        margin-left: 1.5rem;
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-submit {
+        width: 100%;
+        order: 1;
+    }
+    
+    .btn-cancel {
+        order: 2;
     }
 }
