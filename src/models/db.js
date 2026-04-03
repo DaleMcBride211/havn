@@ -65,12 +65,16 @@ if (process.env.NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === '
             }
         },
 
+        async connect() {
+            return await pool.connect();
+        },
+
         async close() {
             await pool.end();
         }
     };
 } else {
-    // In production, export the pool directly without logging overhead
+    
     db = pool;
 }
 

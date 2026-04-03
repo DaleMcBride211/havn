@@ -28,7 +28,14 @@
                 <div class="card-body">
                     <div class="info-group">
                         <label>Term</label>
-                        <p><strong><%= activeLease.startDate %></strong> to <strong><%= activeLease.endDate %></strong></p>
+                        <% 
+                        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' }; 
+                        %>
+                        <p>
+                        <strong><%= activeLease.startDate.toLocaleDateString('en-US', dateOptions) %></strong> 
+                        to 
+                        <strong><%= activeLease.endDate.toLocaleDateString('en-US', dateOptions) %></strong>
+                        </p>
                     </div>
 
                     <div class="info-row">

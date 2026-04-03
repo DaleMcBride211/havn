@@ -193,11 +193,93 @@ const contactValidation = [
     .isInt().withMessage('Invalid property reference')
 ];
 
+const propertyCreateValidation = [
+    // --- 1. Base Property Fields ---
+    body('name')
+        .trim()
+        .notEmpty().withMessage('Property name is required')
+        .isLength({ min: 2, max: 100 }).withMessage('Name must be between 2 and 100 characters'),
+
+    body('address')
+        .trim()
+        .notEmpty().withMessage('Street address is required')
+        .isLength({ min: 5, max: 200 }).withMessage('Please provide a valid street address'),
+
+    body('city')
+        .trim()
+        .notEmpty().withMessage('City is required')
+        .isLength({ min: 2, max: 100 }).withMessage('City must be between 2 and 100 characters'),
+
+    body('state')
+        .trim()
+        .notEmpty().withMessage('State is required')
+        .isLength({ min: 2, max: 2 }).withMessage('State must be exactly 2 characters (e.g., CA)')
+        .toUpperCase(), // Automatically capitalizes 'ca' to 'CA'
+
+    body('zip')
+        .trim()
+        .notEmpty().withMessage('Zip code is required')
+        .matches(/^\d{5}$/).withMessage('Zip code must be exactly 5 digits'),
+
+    body('type')
+        .notEmpty().withMessage('Property type is required')
+        .isIn(['apartment_building', 'house']).withMessage('Please select a valid property type'),
+
+    // --- 2. House Fields (Only validated if type === 'house') ---
+    body('bedrooms')
+        .if(body('type').equals('house'))
+        .notEmpty().withMessage('Bedrooms are required for a house')
+        .isInt({ min: 0 }).withMessage('Bedrooms must be 0 or a positive number'),
+
+    body('bathrooms')
+        .if(body('type').equals('house'))
+        .notEmpty().withMessage('Bathrooms are required for a house')
+        .isFloat({ min: 0 }).withMessage('Bathrooms must be 0 or a positive number'),
+
+    body('sq_ft')
+        .if(body('type').equals('house'))
+        .notEmpty().withMessage('Square footage is required')
+        .isInt({ min: 1 }).withMessage('Square footage must be a positive number'),
+
+    body('market_rent')
+        .if(body('type').equals('house'))
+        .notEmpty().withMessage('Monthly rent is required')
+        .isFloat({ min: 0 }).withMessage('Rent must be a positive number'),
+
+    // --- 3. Apartment Fields (Only validated if type === 'apartment_building') ---
+    // We use a custom validator here because the incoming data could be a String (1 row) or an Array (2+ rows)
+    body('multi_unit_number')
+        .if(body('type').equals('apartment_building'))
+        .custom((value) => {
+            if (!value) throw new Error('At least one unit must be added to the apartment building');
+            
+            // Force to array to check everything
+            const units = Array.isArray(value) ? value : [value];
+            if (units.some(u => u.trim() === '')) {
+                throw new Error('All units must have a unit number');
+            }
+            return true;
+        }),
+
+    body('multi_market_rent')
+        .if(body('type').equals('apartment_building'))
+        .custom((value) => {
+            if (!value) return true; // Handled by unit number check above
+            
+            const rents = Array.isArray(value) ? value : [value];
+            if (rents.some(r => isNaN(parseFloat(r)) || parseFloat(r) < 0)) {
+                throw new Error('All apartment units must have a valid positive rent amount');
+            }
+            return true;
+        })
+];
+
 export { 
     contactValidation, 
     registrationValidation, 
     loginValidation,
     updateAccountValidation,
     maintenanceUpdateValidation,
-    maintenanceCreateValidation
+    maintenanceCreateValidation,
+    propertyCreateValidation
 };

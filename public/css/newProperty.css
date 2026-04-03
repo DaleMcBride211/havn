@@ -1,0 +1,178 @@
+/* --- NEW PROPERTY PAGE STYLES --- */
+
+.new-property-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.new-property-container h1 {
+    color: var(--primary);
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.property-form {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+}
+
+/* Form Grouping */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.help-text {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+/* Inputs & Selects */
+.property-form input[type="text"],
+.property-form input[type="number"],
+.property-form select,
+.property-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.property-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* Grid Layout for Location & Details */
+.location-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 15px;
+}
+
+.unit-details-section .location-row {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Multi-Unit Row Styling */
+.unit-details-section {
+    background: #fcfcfc;
+    padding: 1.5rem;
+    border-radius: 6px;
+    border: 1px dashed #cbd5e0;
+    margin-bottom: 1.5rem;
+}
+
+.multi-unit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.unit-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr 40px;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+/* Buttons */
+.button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    display: inline-block;
+    transition: opacity 0.2s;
+}
+
+.button-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.button-secondary {
+    background: #e2e8f0;
+    color: var(--primary);
+}
+
+.button-sm {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+}
+
+.remove-row-btn {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 4px;
+    height: 35px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.remove-row-btn:hover {
+    background: #fca5a5;
+}
+
+/* Amenities Checkboxes */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.checkbox-group label {
+    font-weight: normal;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Utilities */
+.hidden {
+    display: none;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 600px) {
+    .location-row, 
+    .unit-details-section .location-row,
+    .unit-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .unit-row {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 15px;
+    }
+}

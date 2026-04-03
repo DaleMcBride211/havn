@@ -1,13 +1,18 @@
 <%- include('../partials/header') %>
 
 <main class="container">
-    <h1>Available Rentals</h1>
+    <div class="header-flex">
+        <h1>Available Rentals</h1> 
+        <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/properties/new" class="btn btn-primary">Add New Property</a>
+        <% } %>
+    </div>
     
     <div class="property-grid">
         <% if (properties.length > 0) { %>
             <% properties.forEach(property => { %>
                 <div class="property-card">
-                    <img src="/images/<%= property.id %>.webp" alt="<%= property.name %>">
+                    <img src="/images/<%= property.id %>.webp" alt="<%= property.name %>" loading="lazy" decoding="async">
                     <h3><%= property.name %></h3>
                     <p><%= property.fullAddress %></p>
                     <p><strong><%= property.type %></strong></p>

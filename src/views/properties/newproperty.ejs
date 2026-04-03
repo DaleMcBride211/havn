@@ -1,0 +1,144 @@
+<%- include('../partials/header') %>
+
+<main class="new-property-container">
+    <h1><%= title %></h1>
+
+    <form action="/properties/new" method="POST" class="property-form">
+        
+        <div class="form-group">
+            <label for="name">Property Name</label>
+            <input type="text" id="name" name="name" required placeholder="e.g., Sunset Apartments">
+        </div>
+
+        <div class="form-group">
+            <label for="address">Street Address</label>
+            <input type="text" id="address" name="address" required placeholder="123 Main St">
+        </div>
+
+        <div class="form-group location-row">
+            <div class="field-col">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" required>
+            </div>
+            <div class="field-col">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" required maxlength="2" placeholder="CA">
+            </div>
+            <div class="field-col">
+                <label for="zip">Zip Code</label>
+                <input type="text" id="zip" name="zip" required pattern="[0-9]{5}" title="Five digit zip code">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Property Type</label>
+            <select id="type" name="type" required onchange="toggleUnitFields()">
+                <option value="" disabled selected>Select a type...</option>
+                <option value="apartment_building">Apartment Building</option>
+                <option value="house">Single-Family House</option>
+            </select>
+        </div>
+
+        <div id="single-unit-details" class="unit-details-section hidden">
+            <h4>House Details</h4>
+            <div class="location-row">
+                <div class="field-col">
+                    <label for="bedrooms">Bedrooms</label>
+                    <input type="number" id="bedrooms" name="bedrooms" min="0" step="1">
+                </div>
+                <div class="field-col">
+                    <label for="bathrooms">Bathrooms</label>
+                    <input type="number" id="bathrooms" name="bathrooms" min="0" step="0.5">
+                </div>
+                <div class="field-col">
+                    <label for="sq_ft">Square Feet</label>
+                    <input type="number" id="sq_ft" name="sq_ft">
+                </div>
+                <div class="field-col">
+                    <label for="market_rent">Monthly Rent ($)</label>
+                    <input type="number" id="market_rent" name="market_rent" min="0" step="0.01">
+                </div>
+            </div>
+        </div>
+
+        <div id="multi-unit-details" class="unit-details-section hidden">
+            <div class="multi-unit-header">
+                <h4>Apartment Units</h4>
+                <button type="button" class="button button-secondary button-sm" onclick="addUnitRow()">+ Add Unit</button>
+            </div>
+            <div class="unit-row" style="font-weight: bold; font-size: 0.85rem; color: var(--primary);">
+                <div>Unit #</div>
+                <div>Beds</div>
+                <div>Baths</div>
+                <div>Sq Ft</div>
+                <div>Rent ($)</div>
+                <div></div> </div>
+            
+            <div id="unit-rows-container"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Amenities</label>
+            <span class="help-text">Check all that apply</span>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="amenities" value="Pool"> Pool</label>
+                <label><input type="checkbox" name="amenities" value="Gym"> Fitness Center</label>
+                <label><input type="checkbox" name="amenities" value="Parking"> Dedicated Parking</label>
+                <label><input type="checkbox" name="amenities" value="Laundry"> In-Unit Laundry</label>
+                <label><input type="checkbox" name="amenities" value="Pets"> Pet Friendly</label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="/properties" class="button button-secondary">Cancel</a>
+            <button type="submit" class="button button-primary">Create Property</button>
+        </div>
+
+    </form>
+</main>
+
+<script>
+// Logic to show/hide the correct form sections based on property type
+function toggleUnitFields() {
+    const typeSelect = document.getElementById('type');
+    const singleDetails = document.getElementById('single-unit-details');
+    const multiDetails = document.getElementById('multi-unit-details');
+    const singleInputs = singleDetails.querySelectorAll('input');
+    
+    // Reset Everything First
+    singleDetails.classList.add('hidden');
+    multiDetails.classList.add('hidden');
+    singleInputs.forEach(input => { input.removeAttribute('required'); input.value = ''; });
+    document.getElementById('unit-rows-container').innerHTML = ''; // Clear out apartment rows
+
+    if (typeSelect.value === 'house') {
+        singleDetails.classList.remove('hidden');
+        singleInputs.forEach(input => input.setAttribute('required', 'true'));
+    } 
+    else if (typeSelect.value === 'apartment_building') {
+        multiDetails.classList.remove('hidden');
+        addUnitRow(); // Automatically add the first empty row
+    }
+}
+
+// Logic to inject a new unit row into the form
+function addUnitRow() {
+    const container = document.getElementById('unit-rows-container');
+    const row = document.createElement('div');
+    row.className = 'unit-row';
+    
+    // Notice the names: multi_unit_number, multi_bedrooms, etc.
+    // Express will automatically group these into Arrays if multiple rows exist!
+    row.innerHTML = `
+        <input type="text" name="multi_unit_number" placeholder="e.g. 101" required>
+        <input type="number" name="multi_bedrooms" placeholder="Beds" min="0" step="1" required>
+        <input type="number" name="multi_bathrooms" placeholder="Baths" min="0" step="0.5" required>
+        <input type="number" name="multi_sq_ft" placeholder="Sq Ft" required>
+        <input type="number" name="multi_market_rent" placeholder="Rent" min="0" step="0.01" required>
+        <button type="button" class="remove-row-btn" onclick="this.parentElement.remove()" title="Remove Unit">X</button>
+    `;
+    container.appendChild(row);
+}
+</script>
+
+<%- include('../partials/footer') %>

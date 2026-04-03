@@ -84,7 +84,6 @@ const searchProperties = async (location) => {
     return result.rows.map(mapPropertyRow);
 };
 
-
 const getAvailableProperties = async () => {
     const query = `
         SELECT DISTINCT p.* FROM properties p
@@ -100,6 +99,93 @@ const getAvailableProperties = async () => {
 };
 
 /**
+ * Create a new property (and its first unit if it is a house) using a transaction.
+ * @param {Object} propertyData - Object containing property & unit details.
+ */
+const createProperty = async (propertyData) => {
+    const client = await db.connect(); 
+
+    try {
+        await client.query('BEGIN'); 
+
+        const { 
+            name, address, city, state, zip, type, amenities, 
+            bedrooms, bathrooms, sq_ft, market_rent,
+            multi_unit_number, multi_bedrooms, multi_bathrooms, multi_sq_ft, multi_market_rent
+        } = propertyData;
+
+        // --- NEW: AMENITIES FORMATTING ---
+        // 1. Force the incoming data into an array (handles 0, 1, or multiple checkboxes)
+        const toArray = (val) => {
+            if (!val) return [];
+            return Array.isArray(val) ? val : [val];
+        };
+
+        // 2. Turn ["Pool", "Gym"] into {"Pool": true, "Gym": true}
+        const amenitiesObj = toArray(amenities).reduce((acc, item) => {
+            acc[item] = true;
+            return acc;
+        }, {});
+
+        const formattedAmenities = JSON.stringify(amenitiesObj);
+        // ---------------------------------
+
+        // 1. Insert into Properties Table
+        const propQuery = `
+            INSERT INTO properties (name, address, city, state, zip, property_type, amenities)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING *;
+        `;
+        
+        const propResult = await client.query(propQuery, [name, address, city, state, zip, type, formattedAmenities]);
+        const newPropertyRow = propResult.rows[0];
+
+        // 2a. Handle Single-Family House
+        if (type === 'house') {
+            const unitQuery = `
+                INSERT INTO units (property_id, unit_number, bedrooms, bathrooms, sq_ft, market_rent, status)
+                VALUES ($1, $2, $3, $4, $5, $6, 'vacant');
+            `;
+            await client.query(unitQuery, [newPropertyRow.id, 'Main', bedrooms, bathrooms, sq_ft, market_rent]);
+        }
+        // 2b. Handle Multi-Family Apartment Building
+        else if (type === 'apartment_building' && multi_unit_number) {
+            
+            const unitNumbers = toArray(multi_unit_number);
+            const beds = toArray(multi_bedrooms);
+            const baths = toArray(multi_bathrooms);
+            const sqFts = toArray(multi_sq_ft);
+            const rents = toArray(multi_market_rent);
+
+            const unitQuery = `
+                INSERT INTO units (property_id, unit_number, bedrooms, bathrooms, sq_ft, market_rent, status)
+                VALUES ($1, $2, $3, $4, $5, $6, 'vacant');
+            `;
+
+            for (let i = 0; i < unitNumbers.length; i++) {
+                await client.query(unitQuery, [
+                    newPropertyRow.id,
+                    unitNumbers[i],
+                    beds[i] || null,
+                    baths[i] || null,
+                    sqFts[i] || null,
+                    rents[i] || null
+                ]);
+            }
+        }
+
+        await client.query('COMMIT'); 
+        return mapPropertyRow(newPropertyRow); 
+
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error; 
+    } finally {
+        client.release(); 
+    }
+};
+
+/**
  * Clean wrappers for external use
  */
 const getPropertyById = (id) => getProperty(id, 'id');
@@ -111,5 +197,6 @@ export {
     getProperties, 
     searchProperties,
     getProperty,
-    getAvailableProperties
+    getAvailableProperties,
+    createProperty
 };
