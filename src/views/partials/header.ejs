@@ -29,10 +29,10 @@
                     <% if (user.role === 'admin' || user.role === 'manager') { %>
                         <li><a href="/maintenance">Maintenance Requests</a></li>
                         <li><a href="/contact/responses">Contact Responses</a></li>
-                        <li><a href="/applications">Applications</a></li>
                     <% } %>
-
+                        
                     <% if (user.role === 'admin') { %>
+                        <li><a href="/applications">Applications</a></li>
                         <li><a href="/register/list">All Users</a></li>
                     <% } %>
 

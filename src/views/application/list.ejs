@@ -42,13 +42,13 @@
                             <td class="action-cell">
                                 <div class="action-group">
                                     <% if (app.application_status === 'pending') { %>
-                                        <a href="/admin/applications/approve/<%= app.application_id %>" 
+                                        <a href="/applications/approve/<%= app.application_id %>" 
                                         class="btn-action btn-approve" 
                                         onclick="return confirm('Confirm approval for <%= app.first_name %>?')">
                                         Approve
                                         </a>
                                         
-                                        <a href="/admin/applications/reject/<%= app.application_id %>" 
+                                        <a href="/applications/reject/<%= app.application_id %>" 
                                         class="btn-action btn-reject"
                                         onclick="return confirm('Are you sure you want to reject this application?')">
                                         Reject
