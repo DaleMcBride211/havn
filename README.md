@@ -49,8 +49,8 @@ To test the various permission levels of the application, please use the followi
 ---
 
 ## 5. Known Limitations
-* **CSS Loading Issue:** There is a known intermittent bug where CSS styles may fail to load on the initial page render. This is currently linked to database connection issues.
-* **Workaround:** If the site appears unstyled, a simple page refresh typically resolves the issue and loads the stylesheets correctly. This behavior emerged following the database issues.
+* **Refactor Routes:** I just need to refactor the routes.
+
 
 ## Render Link:
 https://havn-bkjd.onrender.com/ 
