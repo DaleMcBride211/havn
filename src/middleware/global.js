@@ -1,3 +1,4 @@
+// middleware/locals.js
 const getCurrentGreeting = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) return 'Good Morning!';
@@ -6,25 +7,30 @@ const getCurrentGreeting = () => {
 };
 
 const setHeadAssetsFunctionality = (res) => {
-    res.locals.styles = [];
+    // 1. Initialize with your "must-have" base CSS files
+    res.locals.styles = [
+        { content: '<link rel="stylesheet" href="/css/global.css">', priority: 1000 }
+    ];
     res.locals.scripts = [];
+
     res.addStyle = (css, priority = 0) => {
         res.locals.styles.push({ content: css, priority });
     };
+
     res.addScript = (js, priority = 0) => {
         res.locals.scripts.push({ content: js, priority });
     };
-    // These functions will be available in EJS templates
+
     res.locals.renderStyles = () => {
         return res.locals.styles
-            // Sort by priority: higher numbers load first
+            // Sort by priority, then by original index to ensure stability
             .sort((a, b) => b.priority - a.priority)
             .map(item => item.content)
             .join('\n');
     };
+
     res.locals.renderScripts = () => {
         return res.locals.scripts
-            // Sort by priority: higher numbers load first
             .sort((a, b) => b.priority - a.priority)
             .map(item => item.content)
             .join('\n');
@@ -37,21 +43,16 @@ export const addLocalVariables = (req, res, next) => {
     res.locals.currentYear = new Date().getFullYear();
     res.locals.NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
     res.locals.queryParams = { ...req.query };
-    res.locals.greeting = `<p>${getCurrentGreeting()}</p>`;
     
+   
+    res.locals.greetingText = getCurrentGreeting();
+    
+  
     const themes = ['blue-theme', 'green-theme', 'red-theme'];
     res.locals.bodyClass = themes[Math.floor(Math.random() * themes.length)];
 
-    // Convenience variable for UI state based on session state
-    res.locals.isLoggedIn = false;
-    res.locals.user = null; // Default to null
-
-    if (req.session && req.session.user) {
-        res.locals.isLoggedIn = true;
-        // This is the key line! 
-        // It passes the database user (with the role) to EJS
-        res.locals.user = req.session.user; 
-    }
+    res.locals.isLoggedIn = !!(req.session && req.session.user);
+    res.locals.user = req.session?.user || null;
 
     next();
 };

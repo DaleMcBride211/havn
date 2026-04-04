@@ -16,10 +16,15 @@ const propertyListPage = async (req, res) => {
 
 const propertyDetailPage = async (req, res, next) => {
     const propertyId = req.params.id;
-    const currentUser = req.session.user; // Pass the user session
+    const currentUser = req.session.user; 
 
     try {
-        const hasApplied = await hasActiveApplication(currentUser.id);
+        
+        let hasApplied = false;
+        if (currentUser) {
+            hasApplied = await hasActiveApplication(currentUser.id);
+        }
+
         const specificProperty = await getPropertyById(propertyId);
 
         if (!specificProperty) {
@@ -31,10 +36,10 @@ const propertyDetailPage = async (req, res, next) => {
         res.render('properties/detail', {
             title: specificProperty.name,
             stylesheet: 'propertyDetail.css',
-            alreadyApplied: hasApplied,
+            alreadyApplied: hasApplied, 
             specificProperty,
-            currentUser, // Now available in EJS
-            messages: req.flash() // If using connect-flash
+            currentUser, 
+            messages: req.flash() 
         });
     } catch (error) {
         next(error);
