@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> | Havn</title>
-    <%- renderStyles() %>
+    <link rel="stylesheet" href="/css/global.css">
     <% if (locals.stylesheet) { %>
         <link rel="stylesheet" href="/css/<%= stylesheet %>">
     <% } %>
@@ -23,21 +23,21 @@
                 <li><a href="/about">About</a></li>
                 <li><a href="/contact">Contact Us</a></li>
 
-                <% if (isLoggedIn) { %>
+                <% if (locals.isLoggedIn) { %>
                     <li><a href="/dashboard">Dashboard</a></li>
 
-                    <% if (user.role === 'admin' || user.role === 'manager') { %>
+                    <%# Use locals.user to safely check properties %>
+                    <% if (locals.user && (locals.user.role === 'admin' || locals.user.role === 'manager')) { %>
                         <li><a href="/maintenance">Maintenance Requests</a></li>
                         <li><a href="/contact/responses">Contact Responses</a></li>
                     <% } %>
                         
-                    <% if (user.role === 'admin') { %>
+                    <% if (locals.user && locals.user.role === 'admin') { %>
                         <li><a href="/applications">Applications</a></li>
                         <li><a href="/register/list">All Users</a></li>
                     <% } %>
 
                     <li><a href="/logout">Logout</a></li>
-
                 <% } else { %>
                     <li><a href="/login">Login</a></li>
                     <li class="auth-link"><a href="/register" class="btn-primary-sm">Join Havn</a></li>
@@ -46,8 +46,10 @@
         </nav>
     </header>
     <% 
-        const messages = flash();
-        const hasMessages = Object.values(messages).some(arr => arr.length > 0);
+        // Use locals.flash to prevent ReferenceError if middleware didn't run
+        const flashFn = (typeof locals.flash === 'function') ? locals.flash : () => ({});
+        const messages = flashFn(); 
+        const hasMessages = Object.values(messages).some(arr => Array.isArray(arr) && arr.length > 0);
     %>
     <% if (hasMessages) { %>
         <div class="flash-messages">

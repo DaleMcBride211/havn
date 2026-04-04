@@ -11,11 +11,24 @@ export const globalErrorHandler = (err, req, res, next) => {
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
 
-    // ... all your safety net logic for res.locals ...
+    // 1. SAFE DEFAULTS (The bare minimum so header/500.ejs don't crash)
+    const env = process.env.NODE_ENV?.toLowerCase() || 'production';
+    
+    // Inject variables directly into res.locals in case the global middleware failed
+    res.locals.NODE_ENV = env;
+    res.locals.isLoggedIn = res.locals.isLoggedIn ?? !!req.session?.user;
+    res.locals.user = res.locals.user ?? (req.session?.user || null);
+    
+    if (typeof res.locals.flash !== 'function') {
+        res.locals.flash = () => ({ success: [], error: [], warning: [], info: [] });
+    }
 
+    // 2. RENDER THE ERROR PAGE
     res.status(status).render(`errors/${template}`, {
         title: status === 404 ? 'Page Not Found' : 'Server Error',
-        error: process.env.NODE_ENV === 'production' ? 'An error occurred' : err.message,
-        stack: process.env.NODE_ENV === 'production' ? null : err.stack
+        // Make sure the variable names match what 500.ejs expects
+        NODE_ENV: env, 
+        error: env === 'development' ? err.message : 'An unexpected error occurred',
+        stack: env === 'development' ? err.stack : null
     });
 };
