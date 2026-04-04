@@ -112,7 +112,7 @@ const updateMaintenanceRequestPage = async (req, res, next) => {
 
         res.render('maintenance/updateDetail', {
             title: specificRequest.details?.property || 'Update Request Details',
-            stylesheet: '/css/maintenanceUpdateRequest.css',
+            stylesheet: 'maintenanceUpdateRequest.css',
             specificRequest
         });
     } catch (error) {
