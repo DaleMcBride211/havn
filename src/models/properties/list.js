@@ -184,7 +184,7 @@ const hasActiveApplication = async (userId) => {
     const query = `
         SELECT id FROM Applications 
         WHERE applicant_id = $1 
-        AND status IN ('pending', 'under_review', 'approved')
+        AND status IN ('pending', 'under_review')
         LIMIT 1;
     `;
     const result = await db.query(query, [userId]);
